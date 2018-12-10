@@ -73,3 +73,40 @@ class MyThread extends Thread {
 
 **3.Callable和FutureTask创建线程**
 
+```
+public class MyCallable implements Callable<Integer> {
+    int i = 0;
+
+    @Override
+    public Integer call() {
+        int sum = 0;
+        for (; i < 10; i++) {
+            System.out.println(Thread.currentThread().getName() + i);
+            sum += i;
+        }
+        return sum;
+    }
+}
+
+public static void main(String[] args) {
+        SpringApplication.run(DemoApplication.class, args);
+        Callable<Integer> callable = new MyCallable();
+        FutureTask<Integer> task = new FutureTask<Integer>(callable);
+        for (int i = 0; i < 100; i++) {
+            System.out.println(Thread.currentThread().getName() + " " + i);
+            if (i == 30) {
+                Thread thread = new Thread(task);
+                thread.start();
+            }
+        }
+        try {
+            int sum = task.get();
+            System.out.println("Sum is " + sum);
+        } catch (InterruptedException e) {
+
+        } catch (ExecutionException e) {
+
+        }
+    }
+```
+
