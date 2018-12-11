@@ -22,7 +22,9 @@
 
 **死亡状态（Dead）：**线程执行完了或者因异常退出了run()方法，该线程结束生命周期。
 
-
+<p align="center">
+ <img height="400" src="./img/2.jpg?sanitize=true">
+</p>
 
 **2.Runable与Thread创建线程**
 
