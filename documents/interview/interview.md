@@ -42,6 +42,24 @@ CAS算法 即compare and swap（比较与交换），是一种有名的无锁算
 
 
 
+**CountDownLatch、CyclicBarrier和Semaphore**
+
+1. CountDownLatch：利用它可以实现类似计数器的功能。比如有一个任务A，它要等待其他4个任务执行完毕之后才能执行，此时就可以利用CountDownLatch来实现这种功能了。
+
+   ```java
+   //调用await()方法的线程会被挂起，它会等待直到count值为0才继续执行
+   public void await() throws InterruptedException { };   
+   //和await()类似，只不过等待一定的时间后count值还没变为0的话就会继续执行
+   public boolean await(long timeout, TimeUnit unit) throws InterruptedException { }; 
+   public void countDown() { };  //将count值减1
+   ```
+
+2. CyclicBarrier：所有等待线程都被释放以后，CyclicBarrier可以被重用
+
+   当所有线程线程写入操作完毕之后，所有线程就继续进行后续的操作了。如果说想在所有线程写入操作完之后，进行额外的其他操作可以为CyclicBarrier提供Runnable参数
+
+3. Semaphore：翻译成字面意思为 信号量，Semaphore可以控同时访问的线程个数，通过 acquire() 获取一个许可，如果没有就等待，而 release() 释放一个许可。
+
 ## NIO ##
 
 
