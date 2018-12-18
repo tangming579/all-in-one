@@ -40,17 +40,6 @@
 3. hashmap,初始容量16，达到阀值扩容，为原来的两倍
 4. hashtable，初始容量11，达到阀值扩容，oldCapacity * 2 + 1
 
-**并发集合**
-
-Java1.5并发包（java.util.concurrent）包含线程安全集合类，允许在迭代时修改集合。
-
-- 迭代器被设计为fail-fast的，会抛出ConcurrentModificationException。
-
-- 一部分类为：
-  1. CopyOnWriteArrayList
-  2. ConcurrentHashMap
-  3. CopyOnWriteArraySet
-
 **HashMap实现原理**
 
 - hashmap是数组和链表的结合体，数组每个元素存的是链表的头结点
@@ -68,11 +57,15 @@ Java1.5并发包（java.util.concurrent）包含线程安全集合类，允许�
 
 - 需要同时重写该类的hashCode()方法和它的equals()方法。
 
-**HashMap ConcurrentHashMap区别？ConcurrentHashMap如何保证线程安全？**
+**并发集合—ConcurrentHashMap**
 
 ConcurrentHashMap是线程安全的，用来替代HashTable。
 
 ConcurrentHashMap使用分段锁技术，将数据分成一段一段的存储，然后给每一段数据配一把锁，当一个线程占用锁访问其中一个段数据的时候，其他段的数据也能被其他线程访问，能够实现真正的并发访问。
+
+**并发集合—CopyOnWriteArrayList和CopyOnWriteArraySet**
+
+CopyOnWrite容器即写时复制的容器。通俗的理解是当我们往一个容器添加元素的时候，不直接往当前容器添加，而是先将当前容器进行Copy，复制出一个新的容器，然后新的容器里添加元素，添加完元素之后，再将原容器的引用指向新的容器。这样做的好处是我们可以对CopyOnWrite容器进行并发的读，而不需要加锁，因为当前容器不会添加任何元素。所以CopyOnWrite容器也是一种读写分离的思想，读和写不同的容器。
 
 ## 多线程 ##
 
@@ -195,6 +188,34 @@ public static Session getSession() throws InfrastructureException {
 }  
 ```
 
+**线程池**
+
+构造函数：
+
+```java
+public ThreadPoolExecutor(int corePoolSize,int maximumPoolSize,long keepAliveTime,TimeUnit unit,BlockingQueue<Runnable> workQueue);
+```
+
+- corePoolSize：核心池的大小
+
+- maximumPoolSize：线程池最大线程数，它表示在线程池中最多能创建多少个线程
+
+- keepAliveTime：表示线程没有任务执行时最多保持多久时间会终止。
+
+- unit：参数keepAliveTime的时间单位
+- workQueue：一个阻塞队列，用来存储等待执行的任务
+
+在ThreadPoolExecutor类中有几个非常重要的方法：
+
+```
+`execute()``submit()``shutdown()``shutdownNow()`
+```
+
+线程池的关闭　　
+
+- shutdown()：不会立即终止线程池，而是要等所有任务缓存队列中的任务都执行完后才终止，但再也不会接受新的任务
+- shutdownNow()：立即终止线程池，并尝试打断正在执行的任务，并且清空任务缓存队列，返回尚未执行的任务
+
 **CountDownLatch、CyclicBarrier和Semaphore**
 
 1. CountDownLatch：利用它可以实现类似计数器的功能。比如有一个任务A，它要等待其他4个任务执行完毕之后才能执行，此时就可以利用CountDownLatch来实现这种功能了。
@@ -219,13 +240,17 @@ public static Session getSession() throws InfrastructureException {
 
 - 如果一个线程执行一个对象的非static synchronized方法，另外一个线程需要执行这个对象所属类的static synchronized方法，此时不会发生互斥现象，因为访问static synchronized方法占用的是类锁，而访问非static synchronized方法占用的是对象锁，所以不存在互斥现象
 
+**Callable、Future、FutureTask**
+
+
+
 ## NIO ##
 
 
 
  ## 反射 ##
 
-动态代理反射
+动态代理
 
 
 
@@ -251,45 +276,43 @@ public static Session getSession() throws InfrastructureException {
 
 
 
- ## MyBatis   ##
+ **MyBatis**
 
 
 
 
 
- ## Redis  ##
+ **Redis**
 
 
 
- ## Redis持久化 ##
+Redis
 
 
 
-
-
- ## Shiro ##
-
-
-
-
-
- ## HAProxy ##
+ **Shiro**
 
 
 
 
 
- ## Keepalived ##
+**HAProxy**
+
+
+
+
+
+**Keepalived**
 
 ARRP：虚拟路由冗余协议
 
- ## RabbitMQ ##
+ **RabbitMQ**
 
 
 
 # 其他 #
 
- ## Linux ##
+ **Linux**
 
 
 
