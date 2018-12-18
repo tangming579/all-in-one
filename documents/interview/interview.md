@@ -40,6 +40,17 @@
 3. hashmap,初始容量16，达到阀值扩容，为原来的两倍
 4. hashtable，初始容量11，达到阀值扩容，oldCapacity * 2 + 1
 
+**并发集合**
+
+Java1.5并发包（java.util.concurrent）包含线程安全集合类，允许在迭代时修改集合。
+
+- 迭代器被设计为fail-fast的，会抛出ConcurrentModificationException。
+
+- 一部分类为：
+  1. CopyOnWriteArrayList
+  2. ConcurrentHashMap
+  3. CopyOnWriteArraySet
+
 **HashMap实现原理**
 
 - hashmap是数组和链表的结合体，数组每个元素存的是链表的头结点
@@ -49,7 +60,19 @@
 
 **HashMap HashTable区别？，Hashmap key可以是任何类型吗？**
 
+- 区别：
+  1. HashTable的方法是同步的，HashMap方法未经同步，所以在多线程场合要手动同步HashMap这个区别和Vector和ArrayList一样
+  2. Hashtable不允许null值（key和value都不可以），HashMap允许null值（key和value都可以）
+  3. 哈希值的使用不同，Hashtable直接使用对象的HashCode。二HashMap重新计算Hash值，而且用于代替求模。
+  4. HashTable中Hash数字默认大小是11，增加的方式是old*2+1。HashMap中Hash数组的默认大小是16，而且一定是2的指数。
 
+- 需要同时重写该类的hashCode()方法和它的equals()方法。
+
+**HashMap ConcurrentHashMap区别？ConcurrentHashMap如何保证线程安全？**
+
+ConcurrentHashMap是线程安全的，用来替代HashTable。
+
+ConcurrentHashMap使用分段锁技术，将数据分成一段一段的存储，然后给每一段数据配一把锁，当一个线程占用锁访问其中一个段数据的时候，其他段的数据也能被其他线程访问，能够实现真正的并发访问。
 
 ## 多线程 ##
 
@@ -64,6 +87,18 @@
 
 阻塞可以是异步的（a阻塞了但a和b是异步的）；非阻塞也可以是同步的（a非阻塞但a和b是同步的）。
 
+**实现多线程方式**
+
+- 实现多线程方式
+  - 继承Thread类，重写run函数
+  - 实现Runnable接口
+  - 实现Callable接口
+
+- 三种方式区别
+  - 实现Runnable接口可以避免java单继承特性带来的局限；增强程序的健壮性，代码能够被多个线程共享，代码与数据是独立的；适合多个相同程序代码的线程区处理同一资源的情况
+  - 继承Thread和实现Runnable接口启动线程都是使用start方法，然后JVM虚拟机将此线程放倒就绪队列中，如果有处理机可用，则执行run方法
+  - 实现Callable接口要实现call方法，并且线程执行完毕后会有返回值，其他两种都是重新run，没有返回值
+
 **Lock和synchronized的选择**
 
 1. Lock是一个接口，而synchronized是Java中的关键字，synchronized是内置的语言实现；
@@ -75,6 +110,40 @@
 4. 通过Lock可以知道有没有成功获取锁，而synchronized却无法办到。
 
 5. Lock可以提高多个线程进行读操作的效率。
+
+**Volatile**
+
+解释：被volatile修饰的变量对所有线程可见，它是放在共享内存中的
+
+- 具有可见性：确保释放锁之前对共享数据做出的更改对于随后获得该锁的另一个线程是可见的
+
+- 没有原子性：只有一个线程能够执行一段代码，这段代码通过一个monitor object保护。从而防止多个线程在更新共享状态时相互冲突
+
+使用场景：
+
+1. 希望用轻量级的同步提高性能
+2. 对变量的写操作不依赖于当前值
+3. 该变量没有包含在具有其他变量的不变式中
+
+**wait,notify,notifyAll**
+
+- wait:导致当前线程等待，这个方法会释放锁，所以需要在同步代码块中调用(否则会发生
+  IllegalMonitorStateException的异常
+
+- notify:随机选择一个等待中的线程将其唤醒；notify()调用后，并不是马上就释放对象锁
+  的，而是在相应的synchronized(){}语句块执行结束，自动释放锁后，JVM会在wait()对象
+  锁的线程中随机选取一线程，赋予其对象锁，唤醒线程，继续执行。
+
+- notifyAll:将所有等待的线程唤醒
+
+**join,sleep,yield**
+
+- join:等待调用该方法的线程执行完毕后再往下继续执行(该方法也要捕获异常)
+-   sleep:使调用该方法的线程暂停执行一段时间，让其他线程有机会继续执行，但它并不释
+    放对象锁。也就是如果有Synchronized同步块，其他线程仍然不同访问共享数据(注意该
+    方法要捕获异常)
+-   yeild:与sleep()类似，只是不能由用户指定暂停多长时间，并且yield()方法只能让同优先
+    级的线程有执行的机会
 
 **可重入锁**
 
@@ -144,9 +213,11 @@ public static Session getSession() throws InfrastructureException {
 
 3. Semaphore：翻译成字面意思为 信号量，Semaphore可以控同时访问的线程个数，通过 acquire() 获取一个许可，如果没有就等待，而 release() 释放一个许可。
 
+**Syschronized关键字 Sychronized代码块区别？static synchroniezd?**
 
+- synchronized代码块比synchronized方法要灵活。因为也许一个方法中只有一部分代码只需要同步，如果此时对整个方法用synchronized进行同步，会影响程序执行效率。而使用synchronized代码块就可以避免这个问题，synchronized代码块可以实现只对需要同步的地方进行同步。
 
-
+- 如果一个线程执行一个对象的非static synchronized方法，另外一个线程需要执行这个对象所属类的static synchronized方法，此时不会发生互斥现象，因为访问static synchronized方法占用的是类锁，而访问非static synchronized方法占用的是对象锁，所以不存在互斥现象
 
 ## NIO ##
 
