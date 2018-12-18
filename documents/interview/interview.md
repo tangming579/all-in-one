@@ -9,6 +9,13 @@
 <p>
     <image src="../img/2.jpg"></image>
 </p>
+**同步、异步、阻塞、非阻塞**
+
+阻塞非阻塞：描述的是一个线程/进程的状态 它等在那里了 他就是阻塞了；
+
+同步异步： 描述的是一个消息机制或者说一个消息系统 是关于组件之间如何传递和处理消息的
+
+阻塞可以是异步的（a阻塞了但a和b是异步的）；非阻塞也可以是同步的（a非阻塞但a和b是同步的）。
 
 **Lock和synchronized的选择**
 
@@ -40,7 +47,37 @@ CAS算法 即compare and swap（比较与交换），是一种有名的无锁算
 
 **ThreadLocal**
 
+ThreadLocal类提供了如下方法：
 
+```java
+public T get() { }
+public void set(T value) { }
+public void remove() { }
+protected T initialValue() { }
+```
+
+- ThreadLocal的作用是数据隔离，在每一个线程中创建一个新的数据对象，每一个线程使用的是不一样的
+- ThreadLocal内部的ThreadLocalMap键为弱引用，会有内存泄漏的风险。(使用完ThreadLocal之后，记得调用remove方法)
+- 适用于无状态，副本变量独立后不影响业务逻辑的高并发场景。
+
+在著名的框架Hiberante中，数据库连接的代码：
+
+```java
+private static final ThreadLocal threadSession = new ThreadLocal();  
+
+public static Session getSession() throws InfrastructureException {  
+    Session s = (Session) threadSession.get();  
+    try {  
+        if (s == null) {  
+            s = getSessionFactory().openSession();  
+            threadSession.set(s);  
+        }  
+    } catch (HibernateException ex) {  
+        throw new InfrastructureException(ex);  
+    }  
+    return s;  
+}  
+```
 
 **CountDownLatch、CyclicBarrier和Semaphore**
 
@@ -67,6 +104,10 @@ CAS算法 即compare and swap（比较与交换），是一种有名的无锁算
  ## 反射 ##
 
 动态代理反射
+
+
+
+## HashMap实现原理 ##
 
 
 
