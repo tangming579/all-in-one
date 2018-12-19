@@ -233,7 +233,17 @@ public ThreadPoolExecutor(int corePoolSize,int maximumPoolSize,long keepAliveTim
 
 ## NIO
 
+参考：http://wiki.jikexueyuan.com/project/java-nio-zh/java-nio-tutorial.html
 
+Java NIO基本组件如下：
+
+<p>
+	<image src="/documents/img/nio1.png"></image>
+</p>
+
+- 通道和缓冲区(*Channels and Buffers*)：在标准I/O API中，使用字符流和字节流。 在NIO中，使用通道和缓冲区。数据总是从缓冲区写入通道，并从通道读取到缓冲区。
+- 选择器(*Selectors*)：Java NIO提供了“选择器”的概念。这是一个可以用于监视多个通道的对象，如数据到达，连接打开等。因此，单线程可以监视多个通道中的数据。
+- 非阻塞I/O(*Non-blocking I/O*)：Java NIO提供非阻塞I/O的功能。这里应用程序立即返回任何可用的数据，应用程序应该具有池化机制，以查明是否有更多数据准备就绪。
 
 ## 反射
 
@@ -245,6 +255,60 @@ public ThreadPoolExecutor(int corePoolSize,int maximumPoolSize,long keepAliveTim
 
 
 
+# jvm
+
+
+
+# 数据库 #
+
+**数据库优化**
+
+
+
+**索引查找、索引扫描**
+
+
+
+**ACID**
+
+
+
+**四种数据库隔离级别**
+
+1. Serializable （串行化）：最严格的级别，事务串行执行，资源消耗最大；
+2. REPEATABLE READ（重复读） ：保证了一个事务不会修改已经由另一个事务读取但未提交（回滚）的数据。避免了“脏读取”和“不可重复读取”的情况，但不能避免“幻读”，但是带来了更多的性能损失。
+3. READ COMMITTED （提交读）：大多数主流数据库的默认事务等级，保证了一个事务不会读到另一个并行事务已修改但未提交的数据，避免了“脏读取”，但不能避免“幻读”和“不可重复读取”。该级别适用于大多数系统。
+4. Read Uncommitted（未提交读） ：事务中的修改，即使没有提交，其他事务也可以看得到，会导致“脏读”、“幻读”和“不可重复读取
+
+**事务隔离级别**
+
+脏读：读取了另一个事务提交的数据
+
+幻读：读取一次，在读第二次之前insert或者是delete，导致读取的记录数不同
+
+不可重复读：读取一次，在第二次读之前更新了这个数据导致两次数据不同。
+
+## B树、B+树
+
+
+
+## Redis
+
+Redis持久化：
+
+- Redis DataBase(简称RDB)
+  - 执行机制：快照，直接将databases中的key-value的二进制形式存储在了rdb文件中
+  - 优点：性能较高（因为是快照，且执行频率比aof低，而且rdb文件中直接存储的是key-values的二进制形式，对于恢复数据也快）
+  - 使用单独子进程来进行持久化，主进程不会进行任何IO操作，保证了redis的高性能
+  - 缺点：在save配置条件之间若发生宕机，此间的数据会丢失
+  - RDB是间隔一段时间进行持久化，如果持久化之间redis发生故障，会发生数据丢失。所以这种方式更适合数据要求不严谨的时候
+- Append-only file (简称AOF)
+  - 执行机制：将对数据的每一条修改命令追加到aof文件
+  - 优点：数据不容易丢失
+  - 可以保持更高的数据完整性，如果设置追加file的时间是1s，如果redis发生故障，最多会丢失1s的数据；且如果日志写入不完整支持redis-check-aof来进行日志修复；AOF文件没被rewrite之前（文件过大时会对命令进行合并重写），可以删除其中的某些命令（比如误操作的flushall
+  - 缺点：性能较低（每一条修改操作都要追加到aof文件，执行频率较RDB要高，而且aof文件中存储的是命令，对于恢复数据来讲需要逐行执行命令，所以恢复慢）
+  - AOF文件比RDB文件大，且恢复速度慢。
+
 
 
 # Spring
@@ -253,7 +317,9 @@ public ThreadPoolExecutor(int corePoolSize,int maximumPoolSize,long keepAliveTim
 
 # 设计模式
 
-**单例多线程**
+## 单例多线程
+
+
 
 
 
@@ -261,21 +327,9 @@ public ThreadPoolExecutor(int corePoolSize,int maximumPoolSize,long keepAliveTim
 
 
 
-
-
  **MyBatis**
 
-
-
-
-
- **Redis**
-
-
-
-Redis
-
-
+ 
 
  **Shiro**
 
