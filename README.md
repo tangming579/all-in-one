@@ -249,7 +249,33 @@ Java NIO基本组件如下：
 
 动态代理
 
+## 异常处理
 
+Exception和RuntimeException区别
+
+1.RuntimeException是Exception的一个子类，因此，通常说的区别，即Exception和继承Exception的RuntimeException的区别
+
+​     RuntimeException:运行时异常，可以理解为必须运行才能发现的异常，因此运行之前可以不catch，抛异常时，则交由上级(JVM)处理，bug中断程序
+
+​     非RuntimeException:必须有try...catch处理
+
+2.从方法的设计者角度来说
+
+​    RuntimeException：方法使用者无法处理的异常
+
+​    非RuntimeException：方法使用者能处理的异常，如读取文件，使用者完全可以处理文件不处理的情况
+
+3.从2的角度出发，可以看看异常都有哪些
+
+   RuntimeException：NullPointerException、NumberFormatException、ArrayIndexOutOfBoundsException等转换、越界、计算类型异常
+
+ 非RuntimeException：SQLException、IOException
+
+Error：
+
+一般留给JDK内部自己使用，比如内存溢出OutOfMemoryError，这类严重的问题，应用进程什么都做不了，只能终止。用户抓住此类Error，一般无法处理，尽快终止往往是最安全的方式
+
+《Effictive Java》：对于可以恢复的情况使用检查异常，对于编程中的错误使用运行异常
 
 ## RPC
 
@@ -360,15 +386,61 @@ Redis持久化：
 
 ## IOC与AOP
 
+- ioc是什么，有什么用？
+- bean作用域有哪些，说一下各种使用场景？
+- aop是什么，有哪些实现方式？
+- 拦截器是什么，什么场景使用？
+
+- aop里面的cglib原理是什么？
+- aop切方法的方法的时候，哪些方法是切不了的？为什么？
+
 ## 注解
+
+**@PathVariable **
+
+当使用@RequestMapping URI template 样式映射时， 即 someUrl/{paramId}, 这时的paramId可通过 @Pathvariable注解绑定它传过来的值到方法的参数上。
+
+**@RequestHeader、@CookieValue**
+
+可以把Request请求header部分的值绑定到方法的参数上
+
+### @RequestBody
+
+作用： 
+
+​      i) 该注解用于读取Request请求的body部分数据，使用系统默认配置的HttpMessageConverter进行解析，然后把相应的数据绑定到要返回的对象上；
+
+​      ii) 再把HttpMessageConverter返回的对象数据绑定到 controller中方法的参数上。
+
+### @ResponseBody
+
+作用： 
+
+​      该注解用于将Controller的方法返回的对象，通过适当的HttpMessageConverter转换为指定格式后，写入到Response对象的body数据区。
+
+使用时机：
+
+​      返回的数据不是html标签的页面，而是其他某种格式的数据时（如json、xml等）使用；
+
+
+
+Statement:(用于执行不带参数的简单 SQL 语句)
+
+PreparedStatement:(用于执行带或不带 IN 参数的预编译 SQL 语句)
+
+CallableStatement :(用于执行对数据库已存储过程的调用)
 
 ## MyBatis
 
- 
+ Mabatis中#{}和${}的区别
 
  ## Shiro
 
+# 数据结构
 
+## 链表
+
+## 树
 
 # 设计模式
 
