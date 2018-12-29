@@ -404,7 +404,7 @@ Redis持久化：
 
 可以把Request请求header部分的值绑定到方法的参数上
 
-### @RequestBody
+**@RequestBody**
 
 作用： 
 
@@ -412,7 +412,7 @@ Redis持久化：
 
 ​      ii) 再把HttpMessageConverter返回的对象数据绑定到 controller中方法的参数上。
 
-### @ResponseBody
+**@ResponseBody**
 
 作用： 
 
