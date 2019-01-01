@@ -464,6 +464,10 @@ ARRP：虚拟路由冗余协议
 
  ## RabbitMQ
 
+queue的持久化是通过durable=true来实现的
+
+消息确认ack
+
 **Exchange Type**
 
 1. fanout：
