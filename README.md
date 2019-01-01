@@ -462,9 +462,22 @@ CallableStatement :(用于执行对数据库已存储过程的调用)
 
 ARRP：虚拟路由冗余协议
 
- **RabbitMQ**
+ ## RabbitMQ
 
+**Exchange Type**
 
+1. fanout：
+2. direct：
+3. topic：
+4. headers：
+
+**补充说明**
+
+ConnectionFactory、Connection、Channel都是RabbitMQ对外提供的API中最基本的对象。
+
+1. Connection是RabbitMQ的socket链接，它封装了socket协议相关部分逻辑。
+2. ConnectionFactory为Connection的制造工厂。
+3. Channel是我们与RabbitMQ打交道的最重要的一个接口，我们大部分的业务操作是在Channel这个接口中完成的，包括定义Queue、定义Exchange、绑定Queue与Exchange、发布消息等。Connection就是建立一个TCP连接，生产者和消费者的都是通过TCP的连接到RabbitMQ Server中的，这个后续会再程序中体现出来
 
 # 其他
 
