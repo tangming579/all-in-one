@@ -283,10 +283,19 @@ Error：
 
 ## 基础
 
+**七层协议**
+
+<p>
+	<image src="./documents/img/tcpip.png"></image>    
+</p>
+
 ## TCP
 
 **三次握手**
 
+<div>
+<image src="./documents/img/tcpip2.png"></image>    
+</div>
 TCP是可靠的传输控制协议，三次握手能保证数据可靠传输又能提高传输效率。
 
 **如何保证TCP连接的可靠性**
