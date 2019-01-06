@@ -247,7 +247,27 @@ Java NIO基本组件如下：
 
 ## 反射
 
-动态代理
+获取类对象有三种方法：
+
+- 通过forName() -> 示例：Class.forName(“PeopleImpl”)
+- 通过getClass() -> 示例：new PeopleImpl().getClass()
+- .class直接获取 -> 示例：PeopleImpl.class
+
+常用方法：
+
+- getName()：获取类完整方法；
+- getSuperclass()：获取类的父类；
+- newInstance()：创建实例对象；
+- getFields()：获取当前类和父类的public修饰的所有属性；
+- getDeclaredFields()：获取当前类（不包含父类）的声明的所有属性；
+- getMethod()：获取当前类和父类的public修饰的所有方法；
+- getDeclaredMethods()：获取当前类（不包含父类）的声明的所有方法；
+
+**动态代理**
+
+动态代理是一种方便运行时动态构建代理、动态处理代理方法调用的机制，很多场景都是利用类似机制做到的，比如用来包装 RPC 调用、面向切面的编程（AOP）
+
+
 
 ## 异常处理
 
@@ -331,15 +351,17 @@ TCP是可靠的传输控制协议，三次握手能保证数据可靠传输又�
 
 # jvm
 
-**内存结构**
+## 内存结构
 
 
 
-**GC垃圾回收机制**
+## GC
 
 
 
-**调优**
+
+
+## 调优
 
 
 
