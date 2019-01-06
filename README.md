@@ -298,6 +298,17 @@ Error：
 </div>
 TCP是可靠的传输控制协议，三次握手能保证数据可靠传输又能提高传输效率。
 
+**为什么连接的时候是三次握手，关闭的时候却是四次握手？**
+
+因为当Server端收到Client端的SYN连接请求报文后，可以直接发送SYN+ACK报文。其中ACK报文是用来应答的，SYN报文是用来同步的。但是关闭连接时，当Server端收到FIN报文时，很可能并不会立即关闭SOCKET，所以只能先回复一个ACK报文，告诉Client端，"你发的FIN报文我收到了"。只有等到我Server端所有的报文都发送完了，我才能发送FIN报文，因此不能一起发送。故需要四步握手。
+
+**TCP建立连接的过程采用三次握手，已知第三次握手报文的发送序列号为1000，确认序列号为2000，请问第二次握手报文的发送序列号和确认序列号分别为？**
+参考上面TCP连接建立的图。
+客户端：发送X
+服务端：发送Y， 确认X+1
+客户端：发送X+1（1000），确认Y+1（2000）
+可以反推第二次为1999,确认1000
+
 **如何保证TCP连接的可靠性**
 
 1. 校验和：发送的数据包的二进制相加然后取反，目的是检测数据在传输过程中的任何变化。如果收到段的检验和有差错，TCP将丢弃这个报文段和不确认收到此报文段。 
@@ -497,9 +508,9 @@ CallableStatement :(用于执行对数据库已存储过程的调用)
 
 
 
-# 项目
+# 其他
 
-
+## 高可用、高并发
 
 **HAProxy**
 
@@ -509,7 +520,7 @@ CallableStatement :(用于执行对数据库已存储过程的调用)
 
 ARRP：虚拟路由冗余协议
 
- ## RabbitMQ
+## RabbitMQ
 
 queue的持久化是通过durable=true来实现的
 
@@ -529,8 +540,6 @@ ConnectionFactory、Connection、Channel都是RabbitMQ对外提供的API中最�
 1. Connection是RabbitMQ的socket链接，它封装了socket协议相关部分逻辑。
 2. ConnectionFactory为Connection的制造工厂。
 3. Channel是我们与RabbitMQ打交道的最重要的一个接口，我们大部分的业务操作是在Channel这个接口中完成的，包括定义Queue、定义Exchange、绑定Queue与Exchange、发布消息等。Connection就是建立一个TCP连接，生产者和消费者的都是通过TCP的连接到RabbitMQ Server中的，这个后续会再程序中体现出来
-
-# 其他
 
 ## Docker
 
