@@ -267,7 +267,53 @@ Java NIO基本组件如下：
 
 动态代理是一种方便运行时动态构建代理、动态处理代理方法调用的机制，很多场景都是利用类似机制做到的，比如用来包装 RPC 调用、面向切面的编程（AOP）
 
+动态代理技术的常见实现方式有两种：
 
+1. 基于接口的 JDK 动态代理
+
+   JDK Proxy 是通过实现 InvocationHandler 接口来实现的，代码如下：
+
+   ```java
+   // JDK 代理类
+   class AnimalProxy implements InvocationHandler {
+       private Object target; // 代理对象
+       public Object getInstance(Object target) {
+           this.target = target;
+           // 取得代理对象
+           return Proxy.newProxyInstance(target.getClass().getClassLoader(), target.getClass().getInterfaces(), this);
+       }
+       @Override
+       public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+           System.out.println("调用前");
+           Object result = method.invoke(target, args); // 方法调用
+           System.out.println("调用后");
+           return result;
+       }
+   }
+   public static void main(String[] args) {
+       // JDK 动态代理调用
+       AnimalProxy proxy = new AnimalProxy();
+       Animal dogProxy = (Animal) proxy.getInstance(new Dog());
+       dogProxy.eat();
+   }
+   </pre>
+   ```
+
+   注意：JDK Proxy 只能代理实现接口的类（即使是extends继承类也是不可以代理的）。
+
+2. 基于继承的 CGLib 动态代理
+
+   Cglib 是针对类来实现代理的，他的原理是对指定的目标类生成一个子类，并覆盖其中方法实现增强，但因为采用的是继承，所以不能对 final 修饰的类进行代理。Cglib 可以通过 Maven 直接进行版本引用
+
+JDK Proxy 的优势：
+
+- 最小化依赖关系，减少依赖意味着简化开发和维护，JDK 本身的支持，更加可靠；
+- 平滑进行 JDK 版本升级，而字节码类库通常需要进行更新以保证在新版上能够使用；
+
+Cglib 框架的优势：
+
+- 可调用普通类，不需要实现接口；
+- 高性能；
 
 ## 异常处理
 
