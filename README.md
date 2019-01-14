@@ -641,13 +641,49 @@ Dao接口的工作原理是JDK动态代理，Mybatis运行时会使用JDK动态�
 
 ## 链表
 
+
+
 ## 树
+
+
 
 # 设计模式
 
 ## 单例多线程
 
-
+```c#
+//双重锁定
+class Singleton
+{
+    private static Singleton instance;
+    private static readonly object syncRoot = new object();
+    private Singleton(){}
+    public static Singleton GetInstance()
+    {
+        if(instance == null)
+        {
+         	lock(syncRoot)
+            {
+                if(instance == null)
+                {
+                	instance = new Singleton();    
+                }
+            }   
+        }
+        return instance;
+    }
+}
+//静态初始化
+public sealed class Singleton
+{
+    private static readonly Signleton instance = new Singleton();
+    private Singleton(){}
+    public static Singleton GetInstance()
+    {
+        return instance;
+    }
+}
+```
 
 
 
