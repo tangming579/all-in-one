@@ -410,7 +410,11 @@ TCP是可靠的传输控制协议，三次握手能保证数据可靠传输又�
 <p>
 <image src="./documents/img/3.jpg"></image>    
 </p>
+## 装箱与拆箱
 
+有了基本类型之后为什么还要有包装器类型呢？核心:让基本类型具备对象的特征,实现更多的功能.
+
+装箱过程是通过调用包装器的valueOf方法实现的，而拆箱过程是通过调用包装器的 xxxValue方法实现的。（xxx代表对应的基本数据类型）
 
 ## 双亲委派机制
 
@@ -817,8 +821,4 @@ ConnectionFactory、Connection、Channel都是RabbitMQ对外提供的API中最�
 | Shift+F8     | 跳出函数                 |
 | Ctrl+F8      | 设置/取消当前行断点      |
 | Alt+F9       | 运行到光标处             |
-
-智能步入
-
-
 
