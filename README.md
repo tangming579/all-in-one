@@ -805,9 +805,20 @@ ConnectionFactory、Connection、Channel都是RabbitMQ对外提供的API中最�
 
 ## IDEA
 
+| 快捷键       | 说明                     |
+| ------------ | ------------------------ |
+| Alt+F7       | 查找所有引用             |
+| Ctrl+Alt+L   | 格式化代码               |
+| Ctrl+Shift+F | 全局查找                 |
+| Ctrl+B       | 转到定义                 |
+| Alt+Enter    | 导入包                   |
+| F8           | 单步调试，不进入函数内部 |
+| F7           | 单步调试，进入函数内部   |
+| Shift+F8     | 跳出函数                 |
+| Ctrl+F8      | 设置/取消当前行断点      |
+| Alt+F9       | 运行到光标处             |
 
-
-
+智能步入
 
 
 
