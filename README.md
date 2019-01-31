@@ -744,6 +744,12 @@ public sealed class Singleton
 }
 ```
 
+## 状态与策略模式
+
+<div>
+    <image src="./documents/img/state.png"></image>
+</div>
+
 
 
 # 其他
