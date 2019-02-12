@@ -800,11 +800,13 @@ public sealed class Singleton
 
 **HAProxy**
 
-
+HAProxy 是一款提供高可用性、负载均衡以及基于TCP（第四层）和HTTP（第七层）应用的代理软件，支持虚拟主机，它是免费、快速并且可靠的一种解决方案。
 
 **Keepalived**
 
 ARRP：虚拟路由冗余协议
+
+keepalived的作用是检测后端TCP服务的状态，如果有一台提供TCP服务的后端节点死机，或者工作出现故障，keepalived会及时检测到，并将有故障的节点从系统中剔除，当提供TCP服务的节点恢复并且正常提供服务后keepalived会自动将TCP服务的节点加入到集群中
 
 ## RabbitMQ
 
