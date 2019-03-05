@@ -14,6 +14,8 @@ namespace gRPCClient
         {
             Channel channel = new Channel("127.0.0.1:9007", ChannelCredentials.Insecure);
 
+
+
             var client = new gRPC.gRPCClient(channel);
             var reply = client.SayHello(new HelloRequest { Name = "Infly" });
             Console.WriteLine("来自" + reply.Message);
