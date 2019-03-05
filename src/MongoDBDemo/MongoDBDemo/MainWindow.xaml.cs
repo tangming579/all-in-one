@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +22,37 @@ namespace MongoDBDemo
     /// </summary>
     public partial class MainWindow : Window
     {
+        private IMongoCollection<BsonDocument> MyConnection;
+
         public MainWindow()
         {
             InitializeComponent();
+            MyConnection = GetConnection();
+        }
+
+        public IMongoCollection<BsonDocument> GetConnection()
+        {
+            // or use a connection string
+            var client = new MongoClient("mongodb://localhost:27017");
+            var database = client.GetDatabase("test");
+            var collection = database.GetCollection<BsonDocument>("col");
+            return collection;
+        }
+
+        public string Query()
+        {
+            var documents = MyConnection.Find(new BsonDocument()).ToList();
+            var sb = new StringBuilder();
+            foreach (var doc in documents)
+            {
+                sb.Append(doc.ToJson().ToString());
+            }
+            return sb.ToString();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            txb.Text = Query();
         }
     }
 }
