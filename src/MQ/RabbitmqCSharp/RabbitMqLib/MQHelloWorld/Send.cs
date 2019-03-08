@@ -11,7 +11,12 @@ namespace RabbitMqLib.MQHelloWorld
     {
         public void Start()
         {
-            var factory = new ConnectionFactory() { HostName = "http://154.8.184.140", Port = 15672 };
+            var factory = new ConnectionFactory();
+            factory.HostName = "154.8.184.140";
+            factory.UserName = "admin";//用户名
+            factory.Password = "admin";//密码
+            factory.Port = 5672;
+            factory.VirtualHost = "/";
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
