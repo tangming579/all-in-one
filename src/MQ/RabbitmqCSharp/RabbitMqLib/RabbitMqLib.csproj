@@ -52,6 +52,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PublishSubscribe\EmitLog.cs" />
     <Compile Include="PublishSubscribe\ReceiveLogs.cs" />
+    <Compile Include="Topics\EmitLogTopic.cs" />
+    <Compile Include="Topics\ReceiveLogsTopic.cs" />
     <Compile Include="WorkQueues\NewTask.cs" />
     <Compile Include="WorkQueues\Worker.cs" />
   </ItemGroup>
