@@ -1,4 +1,5 @@
 ﻿using RabbitMqLib.MQHelloWorld;
+using RabbitMqLib.Topics;
 using RabbitMqLib.WorkQueues;
 using System;
 using System.Collections.Generic;
@@ -18,11 +19,17 @@ namespace RabbitmqCSharp
             //Receive rec = new Receive();
             //rec.Start();
 
-            NewTask task = new NewTask();
-            task.Start();
+            //NewTask task = new NewTask();
+            //task.Start();
 
             //Worker worker = new Worker();
             //worker.Start();
+
+            EmitLogTopic topic = new EmitLogTopic();
+            topic.Start(args);
+
+            ReceiveLogsTopic revTopic = new ReceiveLogsTopic();
+            revTopic.Start(args);
         }
     }
 }

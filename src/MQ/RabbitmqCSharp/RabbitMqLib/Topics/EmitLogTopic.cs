@@ -9,7 +9,7 @@ namespace RabbitMqLib.Topics
 {
     public class EmitLogTopic
     {
-        public void Start()
+        public void Start(string[] args)
         {
             var factory = new ConnectionFactory();
             factory.HostName = "154.8.184.140";
@@ -18,7 +18,6 @@ namespace RabbitMqLib.Topics
             factory.Port = 5672;
             factory.VirtualHost = "/";
 
-            var args = new string[] { "Hello" };
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
