@@ -12,7 +12,14 @@ public class FileChannelLearn {
         ByteBuffer byteBuffer = ByteBuffer.allocate(48);
         int byteRead = fileChannel.read(byteBuffer);
         while (byteRead!=-1){
+            byteBuffer.flip();
 
+            while(byteBuffer.hasRemaining()){
+                System.out.print((char) byteBuffer.get());
+            }
+            byteBuffer.clear();
+            byteRead = fileChannel.read(byteBuffer);
         }
+        aFile.close();
     }
 }
