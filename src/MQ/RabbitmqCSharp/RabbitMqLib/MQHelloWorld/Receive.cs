@@ -10,7 +10,7 @@ namespace RabbitMqLib.MQHelloWorld
 {
     public class Receive
     {
-        public void Start()
+        public static void Start()
         {
             var factory = new ConnectionFactory();
             factory.HostName = "154.8.184.140";

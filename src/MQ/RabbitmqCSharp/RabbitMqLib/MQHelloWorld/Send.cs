@@ -9,7 +9,7 @@ namespace RabbitMqLib.MQHelloWorld
 {
     public class Send
     {
-        public void Start()
+        public static void Start(string message)
         {
             var factory = new ConnectionFactory();
             factory.HostName = "154.8.184.140";
@@ -27,7 +27,6 @@ namespace RabbitMqLib.MQHelloWorld
                                          autoDelete: false,
                                          arguments: null);
 
-                    string message = "Hello World!";
                     var body = Encoding.UTF8.GetBytes(message);
 
                     channel.BasicPublish(exchange: "",

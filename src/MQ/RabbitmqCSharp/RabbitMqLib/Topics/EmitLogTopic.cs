@@ -9,7 +9,7 @@ namespace RabbitMqLib.Topics
 {
     public class EmitLogTopic
     {
-        public void Start(string[] args)
+        public static void Start(string[] args)
         {
             var factory = new ConnectionFactory();
             factory.HostName = "154.8.184.140";

@@ -11,7 +11,7 @@ namespace RabbitMqLib.WorkQueues
 {
     public class Worker
     {
-        public void Start()
+        public static void Start()
         {
             var factory = new ConnectionFactory();
             factory.HostName = "154.8.184.140";
