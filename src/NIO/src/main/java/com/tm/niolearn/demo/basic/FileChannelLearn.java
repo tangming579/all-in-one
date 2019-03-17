@@ -1,10 +1,10 @@
 package com.tm.niolearn.demo.basic;
 
-import sun.nio.ch.FileChannelImpl;
-
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
+import java.nio.channels.Channel;
 import java.nio.channels.FileChannel;
 
 public class FileChannelLearn {
@@ -36,5 +36,20 @@ public class FileChannelLearn {
         int position = 0;
         long count = fromChannel.size();
         toChannel.transferFrom(fromChannel,position,count);
+    }
+
+    public void writeFile() throws IOException{
+        RandomAccessFile writeFile = new RandomAccessFile("D:/test.txt","rw");
+        FileChannel channel = writeFile.getChannel();
+        String msg = "Hello Java File NIO! " + System.currentTimeMillis();
+        ByteBuffer writeBuffer = ByteBuffer.allocate(48);
+        writeBuffer.clear();
+        writeBuffer.put(msg.getBytes());
+        writeBuffer.flip();
+
+        while (writeBuffer.hasRemaining()){
+            channel.write(writeBuffer);
+        }
+        channel.close();
     }
 }

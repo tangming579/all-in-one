@@ -10,7 +10,8 @@ public class DemoApplication {
         SpringApplication.run(DemoApplication.class, args);
 
         FileChannelLearn learn = new FileChannelLearn();
-        learn.readFile();
+        //learn.readFile();
+        learn.writeFile();
     }
 
 }
