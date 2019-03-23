@@ -1,0 +1,5 @@
+﻿syntax = "proto3";
+
+message Code{
+	int32 index=1;
+}

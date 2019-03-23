@@ -1,5 +1,4 @@
 ﻿using Grpc.Core;
-using GRPCDemo;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +15,11 @@ namespace gRPCClient
 
 
 
-            var client = new gRPC.gRPCClient(channel);
-            var reply = client.SayHello(new HelloRequest { Name = "Infly" });
-            Console.WriteLine("来自" + reply.Message);
+            //var client = new Grpc.Core.
+            //var reply = client.SayHello(new HelloRequest { Name = "Infly" });
+            //Console.WriteLine("来自" + reply.Message);
 
-            channel.ShutdownAsync().Wait();
+            //channel.ShutdownAsync().Wait();
             Console.WriteLine("任意键退出...");
             Console.ReadKey();
         }
