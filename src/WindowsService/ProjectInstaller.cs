@@ -15,5 +15,15 @@ namespace WindowsServiceDemo
         {
             InitializeComponent();
         }
+
+        public override void Install(IDictionary stateSaver)
+        {
+            base.Install(stateSaver);
+        }
+
+        public override void Uninstall(IDictionary savedState)
+        {
+            base.Uninstall(savedState);
+        }
     }
 }
