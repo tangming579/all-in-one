@@ -41,6 +41,7 @@ namespace TaskAndParallel.Test
             Thread.Sleep(2000);
         }
 
+        //因为拆分任务的开销与任务本身的难度比还要高,所以拆分并行就不如串行了.
         public void ParallelFor()
         {
             var items1 = new List<int>(3000000);
