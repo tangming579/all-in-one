@@ -12,7 +12,7 @@ namespace TaskAndParallel
         static void Main(string[] args)
         {
             ParallelTest test = new ParallelTest();
-            test.ParallelFor();
+            test.ParallelForeach();
 
             Console.ReadKey();
         }
