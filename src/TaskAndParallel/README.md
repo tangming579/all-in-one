@@ -75,9 +75,66 @@
 3. Parallel.forEach
 
    ```c#
-   
+   public void ParallelForeach()
+           {
+               var items1 = new List<int>(3000000);
+               for (int i = 1; i < 4; i++)
+               {
+                   Console.WriteLine($"第{i}次比较");
+                   var watch = Stopwatch.StartNew();
+                   watch.Start();
+                   for (int j = 0; j < 3000000; j++)
+                   {
+                       items1.Add(j);
+                   }
+                   Console.WriteLine($"串行计算，集合共耗时：watch.ElapsedMilliseconds}");
+                   GC.Collect();
+                   var items2 = new List<int>(3000000);
+                   items2.Clear();
+                   watch = Stopwatch.StartNew();
+                   watch.Start();
+                   Parallel.ForEach(Partitioner.Create(0, 3000000), j =>
+                   {                    
+                       for (int m = j.Item1; m < j.Item2; m++)
+                       {
+                           items2.Add(m);
+                       }
+                   });
+                   Console.WriteLine($"并行计算，集合共耗时：watch.ElapsedMilliseconds}");
+                   GC.Collect();
+               }
    ```
 
+**注意**
+
+1. 如何退出循环
+
+   在串行代码中break一下就可以了，但是并行就不是这么简单了，不过没关系，在并行循环的委托参数中提供了一个ParallelLoopState，该实例提供了Break和Stop方法来帮我们实现。
+
+   - Break： 当然这个是通知并行计算尽快的退出循环，比如并行计算正在迭代100，那么break后程序还会迭代所有小于100的。
+
+   - Stop：这个就不一样了，比如正在迭代100突然遇到stop，那它啥也不管了，直接退出。
+
+2. 如何捕获异常
+
+   任务是并行计算的，处理过程中可能会产生n多的异常。Exception只能捕获到最后一个异常，而使用AggregateExcepation就可以获取到一组异常
+
+   ```c#
+   static void Main(string[] args)
+       {
+           try
+           {
+               Parallel.Invoke(Run1, Run2);
+           }
+           catch (AggregateException ex)
+           {
+               foreach (var single in ex.InnerExceptions)
+               {
+                   Console.WriteLine(single.Message);
+               }
+           }
+       }
+   ```
 
 ### Task的使用
 
