@@ -138,7 +138,34 @@
 
 ### Task的使用
 
-Task的背后的实现也是使用了线程池线程，但它的性能优于ThreadPool，因为它使用的不是线程池的全局队列，而是使用的本地队列，使线程之间的资源竞争减少。同时Task提供了丰富的API来管理线程、控制。任务跟线程不是一对一的关系，比如开10个任务并不是说会开10个线程，这一点任务有点类似线程池，但是任务相比线程池有很小 的开销和精确的控制。
+Task的背后的实现也是使用了线程池线程，但它的性能优于ThreadPool，因为它使用的不是线程池的全局队列，而是使用的本地队列，使线程之间的资源竞争减少。同时Task提供了丰富的API来管理线程、控制。任务跟线程不是一对一的关系，比如开10个任务并不是说会开10个线程，这一点任务有点类似线程池，但是任务相比线程池有很小的开销和精确的控制。
+
+**Task的生命周期**
+
+- Created：表示默认初始化任务，但是“工厂创建的”实例（Task.Factory.StartNew、Task.Run）直接跳过。
+
+- WaitingToRun: 这种状态表示等待任务调度器分配线程给任务执行。
+
+- RanToCompletion：任务执行完毕。
+
+**取消Task任务**
+
+“取消标记”：CancellationTokenSource.Token，在创建task的时候传入此参数，就可以将主线程和任务相关联，然后在任务中设置“取消信号“叫做ThrowIfCancellationRequested来等待主线程使用Cancel来通知，一旦cancel被调用。task将会抛出OperationCanceledException来中断此任务的执行，最后将当前task的Status的IsCanceled属性设为true。 
+
+**ContinueWith**
+
+```c#
+static void Main(string[] args)
+    {
+        //执行task1
+        var t1 = Task.Factory.StartNew<List<string>>(() => { return Run1(); });
+        var t2 = t1.ContinueWith((i) =>
+        {
+            Console.WriteLine("t1集合中返回的个数：" + string.Join(",", i.Result));
+        });
+        Console.Read();
+    }
+```
 
 
 

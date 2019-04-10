@@ -57,5 +57,49 @@ namespace TaskAndParallel.Test
             Thread.Sleep(1000);
             Console.WriteLine("任务3");
         }
+
+        public void TaskCancel()
+        {
+            var cts = new CancellationTokenSource();
+            var ct = cts.Token;
+
+            var task1 = new Task(() =>
+              {
+                  RunCancel1(ct);
+              }, ct);
+
+            var task2 = new Task(RunCancel2);
+
+            try
+            {
+                task1.Start();
+                task2.Start();
+
+                Thread.Sleep(1000);
+                cts.Cancel();
+                Task.WaitAll(task1, task2);                
+            }
+            catch(AggregateException ex)
+            {
+                foreach(var e in ex.InnerExceptions)
+                {
+                    Console.WriteLine($"CancelException：{e.Message}");
+                }
+                Console.WriteLine("task1是不是被取消了？ {0}", task1.IsCanceled);
+                Console.WriteLine("task2是不是被取消了？ {0}", task2.IsCanceled);
+            }
+        }
+        static void RunCancel1(CancellationToken ct)
+        {
+            ct.ThrowIfCancellationRequested();
+            Console.WriteLine("Task 1");
+            Thread.Sleep(2000);
+            ct.ThrowIfCancellationRequested();
+            Console.WriteLine("Task1第二部分");
+        }
+        static void RunCancel2()
+        {
+            Console.WriteLine("Task 2");
+        }
     }
 }
