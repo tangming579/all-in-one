@@ -11,8 +11,11 @@ namespace TaskAndParallel
     {
         static void Main(string[] args)
         {
-            ParallelTest test = new ParallelTest();
-            test.ParallelForeach();
+            //ParallelTest test = new ParallelTest();
+            //test.ParallelForeach();
+
+            TaskTest test = new TaskTest();
+            test.TaskDemo1();
 
             Console.ReadKey();
         }
