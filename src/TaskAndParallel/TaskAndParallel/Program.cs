@@ -14,8 +14,11 @@ namespace TaskAndParallel
             //ParallelTest test = new ParallelTest();
             //test.ParallelForeach();
 
-            TaskTest test = new TaskTest();
-            test.TaskDemo1();
+            //TaskTest test = new TaskTest();
+            //test.TaskDemo1();
+
+            PLinqTest test = new PLinqTest();
+            test.Demo1();
 
             Console.ReadKey();
         }
