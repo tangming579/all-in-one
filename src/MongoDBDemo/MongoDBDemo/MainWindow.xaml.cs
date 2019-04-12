@@ -25,7 +25,7 @@ namespace MongoDBDemo
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             MyConnection = GetConnection();
-            var databases = ListDatabase();
+            var databases = ListDatabases();
             foreach(var db in databases)
             {
                 txb.AppendText(db.ToString()+'\n');
@@ -47,9 +47,18 @@ namespace MongoDBDemo
             var collection = database.GetCollection<col>("col");
             return collection;
         }
-        public List<BsonDocument> ListDatabase()
+        public List<BsonDocument> ListDatabases()
         {
             using(var cursor = Client.ListDatabases())
+            {
+                var list = cursor.ToList();
+                return list;
+            }
+        }
+        public List<BsonDocument> ListCollections()
+        {
+            var database = Client.GetDatabase("test");
+            using (var cursor = database.ListCollections())
             {
                 var list = cursor.ToList();
                 return list;
@@ -136,6 +145,16 @@ namespace MongoDBDemo
             var result = MyConnection.UpdateOne(filter, update);
             return result.ModifiedCount;
             //MyConnection.UpdateMany(filter, update);
+        }
+
+        public void UseTransaction()
+        {
+            using (var session = Client.StartSession())
+            {
+                session.StartTransaction();
+                
+                session.CommitTransaction(); 
+            }
         }
 
         private void btnInsert_Click(object sender, RoutedEventArgs e)
