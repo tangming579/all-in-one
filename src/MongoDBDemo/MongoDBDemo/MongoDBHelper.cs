@@ -14,28 +14,29 @@ namespace MongoDBDemo
         private static MongoClient client;
         private static IMongoDatabase database;
         //本地配置
-        private const string MongoDBConnectionStr = "mongodb://localhost:27017";
+        private string MongoDBConnectionStr = "mongodb://localhost:27017";
         //数据库名称
         private static string DefaultDataBaseName = "test";
 
 
         public MongoDBHelper()
         {
-            GetConnection(DefaultDataBaseName);
+            GetConnection(MongoDBConnectionStr, DefaultDataBaseName);
         }
 
         /// <summary>
         /// 构造函数 指定数据库
         /// </summary>
         /// <param name="dataBaseName"></param>
-        public MongoDBHelper(string dataBaseName)
+        public MongoDBHelper(string connectionStr, string dataBaseName)
         {
-            GetConnection(dataBaseName);
+            MongoDBConnectionStr = connectionStr;
+            GetConnection(connectionStr, dataBaseName);
         }
 
-        private static void GetConnection(string dataBaseName)
+        private static void GetConnection(string connectionStr, string dataBaseName)
         {
-            client = new MongoClient(MongoDBConnectionStr);
+            client = new MongoClient(connectionStr);
             database = client.GetDatabase(dataBaseName);
         }
 
