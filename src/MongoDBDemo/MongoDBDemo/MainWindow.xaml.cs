@@ -32,10 +32,11 @@ namespace MongoDBDemo
             }
         }
 
-        private IMongoCollection<col> MyConnection;
-        //建议将MongoClient实例存储在全局位置，
-        //要么作为静态变量，要么存储在具有单例生命周期的IoC容器中。
+        //MongoClient、IMongoDatabase、IMongoCollection<TDocument>均为线程安全的
+        //建议要么作为静态变量，要么存储在具有单例生命周期的IoC容器中。
         //---MongoDB官方文档
+        private IMongoCollection<col> MyConnection;
+       
         public static MongoClient Client { private set; get; }
         private MongoDBHelper helper = new MongoDBHelper("mongodb://localhost:27017", "test");
 
@@ -174,7 +175,11 @@ namespace MongoDBDemo
 
         private void btnSelect_Click(object sender, RoutedEventArgs e)
         {
-            SelectAll();
+            //SelectAll();
+
+            var query = MyConnection.AsQueryable().Where(x => x.by == "更新了by").ToList();
+
+            var list = helper.Select<col>("col", t => t.by == "更新了by");
         }
     }
 }

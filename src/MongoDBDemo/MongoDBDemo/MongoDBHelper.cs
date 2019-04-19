@@ -61,6 +61,18 @@ namespace MongoDBDemo
             return InsertAsync(typeof(T).FullName, obj);
         }
 
+
+        public List<T> Select<T>(string collectionName,Expression<Func<T, bool>> condition)
+        {
+            if (database == null)
+            {
+                throw new Exception("没有指定数据库");
+            }
+            var collection = database.GetCollection<T>(collectionName);
+            var query = collection.AsQueryable().Where(condition).ToList();
+            return query;
+        }
+
         /// <summary>
         /// 异步插入多条数据，手动输入collection name
         /// </summary>
