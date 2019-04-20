@@ -94,5 +94,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Infly.Cache.Redis\Infly.Cache.Redis.csproj">
+      <Project>{055cb554-abb7-45ac-9137-8c2d12cbf778}</Project>
+      <Name>Infly.Cache.Redis</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
