@@ -24,12 +24,12 @@ namespace MongoDBDemo
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            MyConnection = GetConnection();
+            //MyConnection = GetConnection();
             var databases = ListDatabases();
-            foreach(var db in databases)
-            {
-                txb.AppendText(db.ToString()+'\n');
-            }
+            //foreach(var db in databases)
+            //{
+            //    txb.AppendText(db.ToString()+'\n');
+            //}
         }
 
         //MongoClient、IMongoDatabase、IMongoCollection<TDocument>均为线程安全的
@@ -38,19 +38,20 @@ namespace MongoDBDemo
         private IMongoCollection<col> MyConnection;
        
         public static MongoClient Client { private set; get; }
-        private MongoDBHelper helper = new MongoDBHelper("mongodb://localhost:27017", "test");
+        private MongoDBHelper helper = new MongoDBHelper("mongodb://10.0.254.13:27017", "StatisticResultDevice");
 
         public IMongoCollection<col> GetConnection()
         {
             //var client = new MongoClient("mongodb://host:27017,host2:27017/?replicaSet=rs0");
-            Client = new MongoClient("mongodb://localhost:27017");
+            Client = new MongoClient("mongodb://10.0.254.13:27017");
             var database = Client.GetDatabase("test");
             var collection = database.GetCollection<col>("col");
             return collection;
         }
         public List<BsonDocument> ListDatabases()
         {
-            using(var cursor = Client.ListDatabases())
+            Client = new MongoClient("mongodb://10.0.254.13:27017");
+            using (var cursor = Client.ListDatabases())
             {
                 var list = cursor.ToList();
                 return list;
@@ -58,6 +59,7 @@ namespace MongoDBDemo
         }
         public List<BsonDocument> ListCollections()
         {
+            var a = Client.ListDatabaseNames();
             var database = Client.GetDatabase("test");
             using (var cursor = database.ListCollections())
             {
@@ -160,7 +162,8 @@ namespace MongoDBDemo
 
         private void btnInsert_Click(object sender, RoutedEventArgs e)
         {
-            Insert();
+            ListCollections();
+            //Insert();
         }
 
         private void btnUpdate_Click(object sender, RoutedEventArgs e)
