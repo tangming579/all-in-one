@@ -1,9 +1,6 @@
 package com.tm.MongoDbDemo;
 
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.*;
 import org.bson.Document;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,7 +13,12 @@ public class MongoDbDemoApplication {
 
 		MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017");
 		MongoDatabase database = mongoClient.getDatabase("test");
-		MongoCollection<Document> collection = database.getCollection("restaurants");
+		MongoCollection<Document> collection = database.getCollection("col");
+		FindIterable findIterable = collection.find();
+		MongoCursor cursor = findIterable.iterator();
+		while (cursor.hasNext()) {
+			System.out.println(cursor.next());
+		}
 	}
 
 }
