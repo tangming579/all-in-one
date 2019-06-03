@@ -31,7 +31,7 @@ namespace MongoDBDemo
             //    txb.AppendText(db.ToString()+'\n');
             //}
             MongoSample sample = new MongoSample();
-            //sample.Ex1();
+            sample.Ex4();
         }
 
         //MongoClient、IMongoDatabase、IMongoCollection<TDocument>均为线程安全的

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDBDemo.Models;
 
 namespace MongoDBDemo
 {
@@ -13,6 +15,7 @@ namespace MongoDBDemo
         private readonly IMongoClient client;
         private readonly IMongoCollection<BsonDocument> collection;
         private readonly IMongoDatabase database;
+        private readonly IMongoCollection<col> collectionCol;
 
         public MongoSample()
         {
@@ -20,6 +23,7 @@ namespace MongoDBDemo
             client = new MongoClient(connectionString);
             database = client.GetDatabase("test");
             collection = database.GetCollection<BsonDocument>("sample");
+            collectionCol = database.GetCollection<col>("col");
         }
 
         public void Ex1()
@@ -59,7 +63,7 @@ namespace MongoDBDemo
             };
 
             collection.InsertMany(documents);
-            
+
         }
 
         public void Ex2()
@@ -81,5 +85,27 @@ namespace MongoDBDemo
             var filterBuilder = Builders<BsonDocument>.Filter;
             var filter2 = filterBuilder.Gt("value", 20) & filterBuilder.Lte("value", 25);
         }
+
+        public void Ex4()
+        {
+            //var list = collectionCol.AsQueryable()
+            //    .GroupBy(x => x.title)
+            //    .Select(g => new { title = g.Key, count = g.Count() })
+            //    .ToList();
+
+            var groups = collectionCol.AsQueryable()
+                .GroupBy(x => x.title)
+                .ToList();
+
+            foreach (var group in groups.OrderBy(x=>x.Key))
+            {
+                //此数据位空，不知道是不是MongodbDriver的Bug
+                foreach (var col in group)
+                {
+                    
+                }
+            }
+        }
+
     }
 }
