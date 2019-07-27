@@ -5,8 +5,36 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProtobufTool"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="ProtoBuf生成工具" Height="350" Width="525">
     <Grid>
-        
+        <StackPanel Margin="36,26,0,0">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Width="80" HorizontalAlignment="Right" TextAlignment="Right" TextWrapping="Wrap" Text="Proto版本：" VerticalAlignment="Center"/>
+                <ComboBox HorizontalAlignment="Left" VerticalAlignment="Center" Width="120">
+                    <ComboBoxItem Content="Proto2" IsSelected="True"></ComboBoxItem>
+                    <ComboBoxItem Content="Proto3"></ComboBoxItem>
+                </ComboBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                <TextBlock Width="80" HorizontalAlignment="Right" TextAlignment="Right" Text="生成类型：" VerticalAlignment="Center"/>
+                <ComboBox HorizontalAlignment="Left" VerticalAlignment="Center" Width="120">
+                    <ComboBoxItem Content="Proto转CS" IsSelected="True"></ComboBoxItem>
+                    <ComboBoxItem Content="CS转Proto"></ComboBoxItem>
+                </ComboBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                <TextBlock Width="80" HorizontalAlignment="Right" TextAlignment="Right" Text="原始文件：" VerticalAlignment="Center"/>
+                <TextBox MinWidth="200" Margin="0,0,10,0"></TextBox>
+                <Button Content="打开文件……"></Button>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
+                <TextBlock Width="80" HorizontalAlignment="Right" TextAlignment="Right" Text="输出路径：" VerticalAlignment="Center"/>
+                <TextBox MinWidth="200"></TextBox>
+            </StackPanel>
+            <Button x:Name="btnCreate" Content="生成" Margin="20,20,0,0" Width="100" HorizontalAlignment="Left" Click="btnCreate_Click"></Button>
+            <TextBox IsReadOnly="True" Margin="20,10,35,0" Height="108"></TextBox>
+        </StackPanel>
+       
+
     </Grid>
 </Window>
