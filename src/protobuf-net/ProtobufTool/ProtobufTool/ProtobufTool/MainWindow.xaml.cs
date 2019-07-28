@@ -38,7 +38,7 @@ namespace ProtobufTool
         //生成proto3
         public string protoc()
         {
-            string command = $@".\protoc.exe --proto_path=protos --csharp_out=gen Demo-Proto3.proto";
+            string command = $@".\protoc.exe --proto_path=protos --csharp_out=gen Proto3.proto";
 
             Process pro = new Process();
             pro.StartInfo.FileName = "cmd.exe";

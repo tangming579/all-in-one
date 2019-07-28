@@ -1,0 +1,16 @@
+﻿syntax = "proto3";
+
+
+message SearchRequest{
+	string query=1;
+	int32 page_number=2;// 最终返回的页数
+	int32 result_per_page=3;// 每页返回的结果数
+	enum Corpus{
+		UNIVERSAL=0;
+		WEB=1;
+		IMAGES=2;
+		LOCAL=3;
+		NEWS=4;
+	}
+	Corpus corpus=4;
+}
