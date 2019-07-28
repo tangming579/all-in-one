@@ -10,7 +10,7 @@
         <StackPanel Margin="36,26,0,0">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Width="80" HorizontalAlignment="Right" TextAlignment="Right" TextWrapping="Wrap" Text="Proto版本：" VerticalAlignment="Center"/>
-                <ComboBox HorizontalAlignment="Left" VerticalAlignment="Center" Width="120">
+                <ComboBox x:Name="cobVersion" HorizontalAlignment="Left" VerticalAlignment="Center" Width="120">
                     <ComboBoxItem Content="Proto2" IsSelected="True"></ComboBoxItem>
                     <ComboBoxItem Content="Proto3"></ComboBoxItem>
                 </ComboBox>
@@ -32,7 +32,7 @@
                 <TextBox MinWidth="200"></TextBox>
             </StackPanel>
             <Button x:Name="btnCreate" Content="生成" Margin="20,20,0,0" Width="100" HorizontalAlignment="Left" Click="btnCreate_Click"></Button>
-            <TextBox IsReadOnly="True" Margin="20,10,35,0" Height="108"></TextBox>
+            <TextBox x:Name="txbOutput" IsReadOnly="True" Margin="20,10,35,0" Height="108"></TextBox>
         </StackPanel>
        
 
