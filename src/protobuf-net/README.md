@@ -10,6 +10,28 @@ PB具有三个版本：
 2. .Net社区版本：<https://github.com/mgravell/protobuf-net>（.Net社区爱好者开发，写法上比较符合.net上的语法习惯，主库名字：protobuf-net.dll）
 3. .Net社区版本（二）：<https://github.com/jskeet/protobuf-csharp-port>（据说是由谷歌的.net员工为.net开发，在官方没有出来csharp的时候开发，到发博文时还在维护，主库名字：Google.ProtocolBuffers.dll）
 
+### proto2与proto3
+
+总的来说，prot3比prot2支持更多语言但更简洁。去掉了一些复杂的语法和特性，更强调约定而弱化语法。如果首次使用Protobuf，建议使用proto3
+
+1. 在第一行非空白费注释行，必须写：
+
+   ```protobuf
+   syntax = "proto3"
+   ```
+
+2. 字段移除了 “required” ，并把 “optional” 改名为 “singular”
+
+   在proto2中 required 也是不推荐使用的。proto3则直接移除了该规则。
+
+3. “repeated” 字段默认采用 packed 编码
+
+   在proto2中，需要明确使用  [packed=true] 来为字段指定比较紧凑的 packed 编码方式
+
+4. 语言增加 Go、Ruby、JavaNano 支持；
+
+5. 移除了default选项；
+
 ### Google.ProtoBuf.dll使用
 
 1. Nuget安装Google.Protobuf和Google.Protobuf.Tools
