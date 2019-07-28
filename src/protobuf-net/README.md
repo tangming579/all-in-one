@@ -16,14 +16,10 @@ PB具有三个版本：
 //指定protobuf语法版本
 syntax = "proto2";
 
-// class Person
-message Person {
-  //required 必须设置（不能为null）
-  required string name = 1;
-  //int32 对应java中的int
-  required int32 id = 2;
-  //optional 可以为空
-  optional string email = 3;
+message Person {  
+  required string name = 1;		//required 必须设置（不能为null）  
+  required int32 id = 2;		//int32 对应java中的int  
+  optional string email = 3;	//optional 可以为空
 
   enum PhoneType {
     MOBILE = 0;
@@ -44,7 +40,25 @@ message AddressBook {
 }
 ```
 
+**Message类型**
 
+相当于C#中的类
+
+**分配字段编号**
+
+message 定义中的每个字段都有**唯一编号**。1 到 15 范围内的字段编号需要一个字节进行编码，编码结果将同时包含编号和类型。16 到 2047 范围内的字段编号占用两个字节。
+
+**指定字段规则**
+
+- **required**: 格式良好的 message 必须包含该字段一次。
+- **optional**: 格式良好的 message 可以包含该字段零次或一次（不超过一次）。
+- **repeated**: 该字段可以在格式良好的消息中重复任意多次（包括零）。其中重复值的顺序会被保留。
+
+由于一些历史原因，标量数字类型的 repeated 字段不能尽可能高效地编码。新代码应使用特殊选项 [packed = true] 来获得更高效的编码
+
+**Reserved保留字段**
+
+如果通过完全删除字段或将其注释掉来更新 message 类型，则未来一些用户在做他们的修改或更新时就可能会再次使用这些字段编号。如果以后加载相同 `.proto` 的旧版本，这可能会导致一些严重问题，包括数据损坏，隐私错误等。确保不会发生这种情况的一种方法是指定已删除字段的字段编号为 “保留” 状态。
 
 ### proto2与proto3
 
