@@ -10,6 +10,42 @@ PB具有三个版本：
 2. .Net社区版本：<https://github.com/mgravell/protobuf-net>（.Net社区爱好者开发，写法上比较符合.net上的语法习惯，主库名字：protobuf-net.dll）
 3. .Net社区版本（二）：<https://github.com/jskeet/protobuf-csharp-port>（据说是由谷歌的.net员工为.net开发，在官方没有出来csharp的时候开发，到发博文时还在维护，主库名字：Google.ProtocolBuffers.dll）
 
+### 语法指引（proto2）
+
+```protobuf
+//指定protobuf语法版本
+syntax = "proto2";
+
+// class Person
+message Person {
+  //required 必须设置（不能为null）
+  required string name = 1;
+  //int32 对应java中的int
+  required int32 id = 2;
+  //optional 可以为空
+  optional string email = 3;
+
+  enum PhoneType {
+    MOBILE = 0;
+    HOME = 1;
+    WORK = 2;
+  }
+
+  message PhoneNumber {
+    required string number = 1;
+    optional PhoneType type = 2 [default = HOME];
+  }
+   //repeated 重复的 （集合）
+  repeated PhoneNumber phones = 4;
+}
+
+message AddressBook {
+  repeated Person people = 1;
+}
+```
+
+
+
 ### proto2与proto3
 
 总的来说，prot3比prot2支持更多语言但更简洁。去掉了一些复杂的语法和特性，更强调约定而弱化语法。如果首次使用Protobuf，建议使用proto3
@@ -31,6 +67,18 @@ PB具有三个版本：
 4. 语言增加 Go、Ruby、JavaNano 支持；
 
 5. 移除了default选项；
+
+   在proto2中，可以使用 default 选项为某一字段指定默认值。在proto3中，字段默认值只能根据字段类型有系统决定。
+
+   字段被设置为默认值时，该字段不会被序列化。这样可以节省空间，提高效率。
+
+6. 枚举类型的第一个字段必须为0；
+
+7. 移除了对分组的支持；
+
+8. 移除了对扩展的支持，增加了 Any 类型；
+
+9. 增加了 JSON 映射特性；
 
 ### Google.ProtoBuf.dll使用
 
