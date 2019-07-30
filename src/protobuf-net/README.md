@@ -60,6 +60,26 @@ message 定义中的每个字段都有**唯一编号**。1 到 15 范围内的�
 
 如果通过完全删除字段或将其注释掉来更新 message 类型，则未来一些用户在做他们的修改或更新时就可能会再次使用这些字段编号。如果以后加载相同 `.proto` 的旧版本，这可能会导致一些严重问题，包括数据损坏，隐私错误等。确保不会发生这种情况的一种方法是指定已删除字段的字段编号为 “保留” 状态。
 
+**数据类型**
+
+| .proto类型 | Java 类型  | C++类型 | 备注                                                         |
+| ---------- | ---------- | ------- | ------------------------------------------------------------ |
+| double     | double     | double  |                                                              |
+| float      | float      | float   |                                                              |
+| int32      | int        | int32   | 使用可变长编码方式。编码负数时不够高效——如果你的字段可能含有负数，那么请使用sint32。 |
+| int64      | long       | int64   | 使用可变长编码方式。编码负数时不够高效——如果你的字段可能含有负数，那么请使用sint64。 |
+| uint32     | int[1]     | uint32  | Uses variable-length encoding.                               |
+| uint64     | long[1]    | uint64  | Uses variable-length encoding.                               |
+| sint32     | int        | int32   | 使用可变长编码方式。有符号的整型值。编码时比通常的int32高效。 |
+| sint64     | long       | int64   | 使用可变长编码方式。有符号的整型值。编码时比通常的int64高效。 |
+| fixed32    | int[1]     | uint32  | 总是4个字节。如果数值总是比总是比228大的话，这个类型会比uint32高效。 |
+| fixed64    | long[1]    | uint64  | 总是8个字节。如果数值总是比总是比256大的话，这个类型会比uint64高效。 |
+| sfixed32   | int        | int32   | 总是4个字节。                                                |
+| sfixed64   | long       | int64   | 总是8个字节。                                                |
+| bool       | boolean    | bool    |                                                              |
+| string     | String     | string  | 一个字符串必须是UTF-8编码或者7-bit ASCII编码的文本。         |
+| bytes      | ByteString | string  | 可能包含任意顺序的字节数据。                                 |
+
 ### proto2与proto3
 
 总的来说，prot3比prot2支持更多语言但更简洁。去掉了一些复杂的语法和特性，更强调约定而弱化语法。如果首次使用Protobuf，建议使用proto3
