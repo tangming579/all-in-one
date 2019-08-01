@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,8 +31,8 @@ namespace ProtobufTool
         {
             switch (cobVersion.SelectedIndex)
             {
-                case 0: txbOutput.Text = protogen(); break;
-                case 1: txbOutput.Text = protoc(); break;
+                //case 0: txbOutput.Text = protogen(); break;
+                //case 1: txbOutput.Text = protoc(); break;
             }
         }
 
@@ -64,7 +65,12 @@ namespace ProtobufTool
         //老版protogen生成器，只可生成proto2
         public string protogen()
         {
-            string command = $@"ProtoGen\protogen.exe -i:protos\Proto2.proto -o:gen\Proto2.cs";
+            string outputPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "gen");
+            if (!Directory.Exists(outputPath))
+            {
+                Directory.CreateDirectory(outputPath);
+            }
+            string command = $@"ProtoGen\protogen.exe -i:protos\Proto2.proto -o:{outputPath}\Proto2.cs";
 
             Process pro = new Process();
             pro.StartInfo.FileName = "cmd.exe";

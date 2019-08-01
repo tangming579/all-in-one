@@ -19,12 +19,12 @@ message ReqGetRole{
 }
 //获取角色基本信息
 message ResGetRole{
-	optional string uid = 1; // 用户ID
-	optional string user_name = 2; // 角色名
+	required string uid = 1; // 用户ID
+	required string user_name = 2; // 角色名
 	optional int32 endurance = 3; // 耐力
 	optional int32 gold = 4;//金币
 	optional int32 wing = 5;//元宝
 	optional int32 lv = 6;//等级
 	optional int32 vip = 7;//vip等级
-	optional int32 head = 8;//头像
+	repeated int32 head = 8;//头像
 }

@@ -12,6 +12,8 @@ PB具有三个版本：
 
 ### 语法指引（proto2）
 
+参考文档：https://developers.google.cn/protocol-buffers/docs/overview
+
 ```protobuf
 //指定protobuf语法版本
 syntax = "proto2";
