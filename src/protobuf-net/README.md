@@ -64,6 +64,54 @@ message 定义中的每个字段都有**唯一编号**。1 到 15 范围内的�
 
 由于一些历史原因，标量数字类型的 repeated 字段不能尽可能高效地编码。新代码应使用特殊选项 [packed = true] 来获得更高效的编码
 
+**关于Optional的补充说明**
+
+使用 protobuf-net 生成的cs文件默认没有接口判断可选参数是否有值，需要在生成命令中增加 -p:detectMissing参数才能生成判断接口。
+
+例如 rpc.proto：
+
+```protobuf
+
+```
+
+生成 rpc.cs：
+
+protogen -i:rpc.proto -o:%OUT_DIR%/rpc.cs
+
+```c#
+public partial class RpcRequest : global::ProtoBuf.IExtensible
+{
+    private uint _id = default(uint);
+    public uint id
+    {
+      get { return _id; }
+      set { _id = value; }
+    }
+}  
+```
+
+添加 -p:detectMissing 参数后： 
+protogen -i:rpc.proto -o:%OUT_DIR%/rpc.cs -p:detectMissing
+
+```C#
+ public partial class RpcRequest : global::ProtoBuf.IExtensible
+  {
+    private uint? _id;
+    public uint id
+    {
+      get { return _id?? default(uint); }
+      set { _id = value; }
+    }
+    public bool idSpecified
+    {
+      get { return this._id != null; }
+      set { if (value == (this._id== null)) this._id = value ? this.id : (uint?)null; }
+    }
+    private bool ShouldSerializeid() { return idSpecified; }
+    private void Resetid() { idSpecified = false; }
+  }
+```
+
 **Reserved保留字段**
 
 如果通过完全删除字段或将其注释掉来更新 message 类型，则未来一些用户在做他们的修改或更新时就可能会再次使用这些字段编号。如果以后加载相同 `.proto` 的旧版本，这可能会导致一些严重问题，包括数据损坏，隐私错误等。确保不会发生这种情况的一种方法是指定已删除字段的字段编号为 “保留” 状态。
