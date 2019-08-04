@@ -39,6 +39,13 @@ AMQP，即Advanced Message Queuing Protocol，高级消息队列协议，是应�
 
 Exchange接收消息后，根据消息的key和已经设置的Binding，进行信息路由，将消息投递到一个或多个消息队列里。有三种类型的Exchanges：direct、fanout、topic，每个实现了不同的路由算法（routing algorithm）：
 
+| Name（交换机类型）            | 预声明的默认名称                        |
+| ----------------------------- | --------------------------------------- |
+| Direct exchange（直连交换机） | (Empty string) and amq.direct           |
+| Fanout exchange（扇型交换机） | amq.fanout                              |
+| Topic exchange（主题交换机）  | amq.topic                               |
+| Headers exchange（头交换机）  | amq.match (and amq.headers in RabbitMQ) |
+
 **fanout（扇形交换机）**
 
 fanout类型的Exchange路由规则非常简单，它会把所有发送到该Exchange的消息路由到所有与它绑定的Queue中。
@@ -59,5 +66,19 @@ direct类型的Exchange路由规则也很简单，它会把消息路由到那些
 
 
 
-**topic**
+**topic（主题交换机）**
 
+通过对消息的路由键和队列到交换机的绑定模式之间的匹配，将消息路由给一个或多个队列。比如符号”#”匹配一个或多个词，符号””匹配正好一个词。例如”abc.#”匹配”abc.def.ghi”，”abc.”只匹配”abc.def”。
+
+<div>
+    <image src="res/img/topic.png"></image>
+</div>
+
+使用案例：
+
+- 分发有关于特定地理位置的数据，例如销售点
+- 由多个工作者（workers）完成的后台任务，每个工作者负责处理某些特定的任务
+- 股票价格更新（以及其他类型的金融数据更新）
+- 涉及到分类或者标签的新闻更新（例如，针对特定的运动项目或者队伍）
+- 云端的不同种类服务的协调
+- 分布式架构/基于系统的软件封装，其中每个构建者仅能处理一个特定的架构或者系统。
