@@ -39,10 +39,25 @@ AMQP，即Advanced Message Queuing Protocol，高级消息队列协议，是应�
 
 Exchange接收消息后，根据消息的key和已经设置的Binding，进行信息路由，将消息投递到一个或多个消息队列里。有三种类型的Exchanges：direct、fanout、topic，每个实现了不同的路由算法（routing algorithm）：
 
-**fanout**
+**fanout（扇形交换机）**
 
 fanout类型的Exchange路由规则非常简单，它会把所有发送到该Exchange的消息路由到所有与它绑定的Queue中。
 
-**direct**
+<div>
+    <image src="/res/img/fanout.png"></image>
+</div>
 
-完全根据key进行投递的叫做Direct交换机。如果Routing key匹配，那么Message就会被投递到相应的queue中。
+fanout不需要处理Routing key。只需要简单的将队列绑定到Exchange上。这样发送到Exchange的消息会被转发到与该交换机绑定的所有队列上。类似子网广播，每台子网内的主机都获得一份复制的消息。
+
+**direct（直连交换机）**
+
+direct类型的Exchange路由规则也很简单，它会把消息路由到那些binding key与routing key完全匹配的Queue中。
+
+<div>
+    <image src="/res/img/direct.png"></image>
+</div>
+
+
+
+**topic**
+
