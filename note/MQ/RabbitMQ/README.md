@@ -98,7 +98,13 @@ direct类型的Exchange路由规则也很简单，它会把消息路由到那些
 
 ### 持久化
 
+1. exchange持久化，在声明时指定durable => true
+2. queue持久化，在声明时指定durable => true
+3. 消息持久化，在投递时指定delivery_mode=> 2（1是非持久化）
 
+如果exchange和queue都是持久化的，那么它们之间的binding也是持久化的。如果exchange和queue两者之间有一个持久化，一个非持久化，就不允许建立绑定。
+
+注意：一旦创建了队列和交换机，就不能修改其标志了。例如，如果创建了一个non-durable的队列，然后想把它改变成durable的，唯一的办法就是删除这个队列然后重现创建。
 
 ### 分布式部署
 
