@@ -25,11 +25,9 @@ namespace RabbitmqCSharp
             //Worker worker = new Worker();
             //worker.Start();
 
-            EmitLogTopic topic = new EmitLogTopic();
-            topic.Start(args);
+            EmitLogTopic.Start(args);
 
-            ReceiveLogsTopic revTopic = new ReceiveLogsTopic();
-            revTopic.Start(args);
+            ReceiveLogsTopic.Start(args);
         }
     }
 }

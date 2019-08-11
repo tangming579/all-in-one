@@ -12,9 +12,9 @@ namespace RabbitMqLib.Topics
         public static void Start(string[] args)
         {
             var factory = new ConnectionFactory();
-            factory.HostName = "154.8.184.140";
-            factory.UserName = "admin";//用户名
-            factory.Password = "admin";//密码
+            factory.HostName = "localhost";
+            factory.UserName = "guest";//用户名
+            factory.Password = "guest";//密码
             factory.Port = 5672;
             factory.VirtualHost = "/";
 
