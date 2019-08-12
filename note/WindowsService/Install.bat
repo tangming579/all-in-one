@@ -12,7 +12,7 @@ GOTO END
 
 :EXIST
 Net Stop Service1
-InstallUtil.exe /u Service1exe
+InstallUtil.exe /u Service1.exe
 GOTO NOTEXIST
 
 :END
