@@ -106,6 +106,16 @@ direct类型的Exchange路由规则也很简单，它会把消息路由到那些
 
 注意：一旦创建了队列和交换机，就不能修改其标志了。例如，如果创建了一个non-durable的队列，然后想把它改变成durable的，唯一的办法就是删除这个队列然后重现创建。
 
+### Web管理界面
+
+打开浏览器，输入 http://[server-name\]:15672 如 http://localhost:15672/  ，会要求输入用户名和密码，用默认的guest/guest即可（**guest/guest用户只能从localhost地址登录，如果要配置远程登录，必须另创建用户**），确认后会出现下面界面：
+
+<div>
+    <image src="res/img/webmgr.png"></image>
+</div>
+
+
+
 ### 分布式部署
 
 
