@@ -1,30 +1,9 @@
-// 登陆请求
-message ReqLogin {
-	optional string account = 1; // 账号
-	optional string password = 2; // 密码
-}
-//创建账号
-message ReqCreateAccount{
-	optional string account = 1; // 账号
-	optional string password = 2; // 密码
-}
-//创建角色
-message ReqCreateRole{
-	optional string uid = 1; // 用户ID
-	optional string user_name = 2; // 角色名
-}
-//获取角色基本信息
-message ReqGetRole{
-	optional string uid = 1; // 用户ID
-}
-//获取角色基本信息
-message ResGetRole{
-	required string uid = 1; // 用户ID
-	required string user_name = 2; // 角色名
-	optional int32 endurance = 3; // 耐力
-	optional int32 gold = 4;//金币
-	optional int32 wing = 5;//元宝
-	optional int32 lv = 6;//等级
-	optional int32 vip = 7;//vip等级
-	repeated int32 head = 8;//头像
+message  GateShowLEDChangeMsg
+{
+    required  MsgHeader header = 1;
+    required  string  passwag_no =2;		// 通道ID，对应数据库中的PasswayNo
+    optional  int32  show_id = 3;	  		//高位显示屏显示ID，-1自定义 1无申报通道 2申报通道  												3外交礼遇通道 4工作人员通道 5通道禁用 6调试中
+    optional  string  show_value = 4；	    //高位显示屏中文名称，仅在show_id = -1 时有效；
+	optional  string  show_subvalue = 5;	 //高位显示屏英文名称，仅在show_id = -1 时有效；
+	optional  bytes   show_image = 6;		 //高位显示屏显示图片，以base64形式表示，仅在														show_id = -1 时有效；          
 }
