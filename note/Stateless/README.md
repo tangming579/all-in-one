@@ -31,3 +31,31 @@ phoneCall.Fire(Trigger.CallDialled);
 Assert.AreEqual(State.Ringing, phoneCall.State);
 ```
 
+### 状态分级
+
+如下，OnHold 状态是 Connected 状态的子状态，这意味着 OnHold 状态时也处于 Connected 状态
+
+```
+phoneCall.Configure(State.OnHold)
+	.SubstateOf(State.Connected)
+	.Permit(Trigger.TakenOfHold, State.Connected)
+	.Permit(Trigger.PhoneHurledAgainstWall, State.PhoneDestroyed);
+```
+
+### Entry/Exit Events
+
+当电话处于 Connected 状态时，StartCallTimer() 方法将会执行。当电话处于 Completes 时，StopCallTimer() 方法会被执行。
+
+调用可以在 Connected 和 OnHold 之间来回切换，但却不会重复调用StartCallTimer() 和 StopCallTimer() 方法。因为 OnHold 状态是 Connected 的子状态。
+
+### 额外存储
+
+Stateless 被设计为可以嵌入代码的 Models 中。例如，一些 ORM 会要求定义一些用于对象关系映射的数据，通过UI层与储存位置进行绑定。 StateMachine 构造函数可以接受用于读取和写入状态值的函数参数：
+
+```c#
+var stateMachine = new StateMachine<State, Trigger>(
+    () => myState.Value,
+    s => myState.Value = s);
+```
+
+在这个示例中，StateMachine 将会使用 myState 对象来存储状态。
