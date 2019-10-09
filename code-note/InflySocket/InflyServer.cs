@@ -17,6 +17,7 @@ namespace InflySocket
             await Task.WhenAll(reading, writing);
         }
 
+        //写入循环
         async Task FillPipeAsync(Socket socket, PipeWriter writer)
         {
             const int minimumBufferSize = 512;
