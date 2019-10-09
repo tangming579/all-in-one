@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Pipelines;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -23,6 +25,25 @@ namespace PipeLinesDemo
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        async Task ProcessLinesAsync(Socket socket)
+        {
+            var pipe = new Pipe();
+            Task writing = FillPipeAsync(socket, pipe.Writer);
+            Task reading = ReadPipeAsync(pipe.Reader);
+
+            await Task.WhenAll(reading, writing);
+        }
+
+        async Task FillPipeAsync(Socket socket, PipeWriter writer)
+        {
+
+        }
+
+        async Task ReadPipeAsync(PipeReader reader)
+        {
+
         }
     }
 }
