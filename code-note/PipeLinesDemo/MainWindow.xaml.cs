@@ -25,25 +25,6 @@ namespace PipeLinesDemo
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-        async Task ProcessLinesAsync(Socket socket)
-        {
-            var pipe = new Pipe();
-            Task writing = FillPipeAsync(socket, pipe.Writer);
-            Task reading = ReadPipeAsync(pipe.Reader);
-
-            await Task.WhenAll(reading, writing);
-        }
-
-        async Task FillPipeAsync(Socket socket, PipeWriter writer)
-        {
-
-        }
-
-        async Task ReadPipeAsync(PipeReader reader)
-        {
-
-        }
+        }        
     }
 }
