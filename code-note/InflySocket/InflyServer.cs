@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Buffers;
 using System.IO.Pipelines;
+using System.Linq;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -8,6 +10,8 @@ namespace InflySocket
 {
     public class InflyServer
     {
+        bool running;
+
         async Task ProcessLinesAsync(Socket socket)
         {
             var pipe = new Pipe();
@@ -22,7 +26,7 @@ namespace InflySocket
         {
             const int minimumBufferSize = 512;
 
-            while (true)
+            while (running)
             {
                 //从PipeWriter至少分配512字节
                 Memory<byte> memory = writer.GetMemory(minimumBufferSize);
@@ -58,9 +62,42 @@ namespace InflySocket
             writer.Complete();
         }
 
+        //读取流
         async Task ReadPipeAsync(PipeReader reader)
         {
+            while (running)
+            {
+                //等待writer写数据
+                ReadResult result = await reader.ReadAsync();
+                //获得内存区域
+                ReadOnlySequence<byte> buffer = result.Buffer;
+                SequencePosition? position = null;
 
+                do
+                {
+                    // 在缓冲数据中查找找一个行末尾
+                    position = buffer.PositionOf((byte)'\n');
+
+                    if (position != null)
+                    {
+                        // 处理这一行
+                        //ProcessLine(buffer.Slice(0, position.Value));
+
+                        // 跳过 这一行+\n (basically position 主要位置？)
+                        buffer = buffer.Slice(buffer.GetPosition(1, position.Value));
+                    }
+                }
+                while (position != null);
+                //数据处理完毕，告诉pipe还剩下多少数据没有处理（数据包不完整的数据，找不到head）
+                reader.AdvanceTo(buffer.Start, buffer.End);
+
+                if (result.IsCompleted)
+                {
+                    break;
+                }
+            }
+            //将PipeReader标记为完成
+            reader.Complete();
         }
     }
 }
