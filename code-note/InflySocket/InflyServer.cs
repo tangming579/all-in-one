@@ -1,16 +1,69 @@
 ﻿using System;
 using System.Buffers;
+using System.Collections.Generic;
 using System.IO.Pipelines;
 using System.Linq;
+using System.Net;
 using System.Net.Sockets;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace InflySocket
 {
     public class InflyServer
     {
-        bool running;
+        private bool running;
+        private Socket socket;
+
+        public List<SessionBase> Clients = new List<SessionBase>();//tcp客户端字典
+
+        public bool Listen(int port)
+        {
+            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            IPEndPoint endPoint = new IPEndPoint(IPAddress.Any, port);
+            try
+            {
+                // 将负责监听的套接字绑定到唯一的ip和端口上；
+                socket.Bind(endPoint);
+            }
+            catch
+            {
+                return false;
+            }
+            // 设置监听队列的长度；
+            socket.Listen(100);
+            running = true;
+            Task.Run(new Action(() =>
+            {
+                ListenConnecting();
+            }));
+            return true;
+        }
+
+        /// <summary>
+        /// 监听客户端请求的方法；
+        /// </summary>
+        private void ListenConnecting()
+        {
+            while (running)  // 持续不断的监听客户端的连接请求；
+            {
+                try
+                {
+                    Socket sokConnection = socket.Accept(); // 一旦监听到一个客户端的请求，就返回一个与该客户端通信的 套接字；
+                    // 将与客户端连接的 套接字 对象添加到集合中；
+                    string str_EndPoint = sokConnection.RemoteEndPoint.ToString();
+                    SessionBase myTcpClient = new SessionBase() { TcpSocket = sokConnection, EndPoint = str_EndPoint };
+
+                    Clients.Add(myTcpClient);
+                }
+                catch
+                {
+
+                }
+                Thread.Sleep(200);
+            }
+        }
 
         async Task ProcessLinesAsync(Socket socket)
         {
