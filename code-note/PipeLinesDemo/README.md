@@ -96,11 +96,15 @@ var buffer = result.Buffer;
 
 获取到缓冲区后，就是使用缓冲区的数据
 
+```c#
 var data = buffer.ToArray();
+```
 
 使用完后，告诉PIPE当前使用了多少数据，下次接着从结束位置后读起
 
+```c#
 reader.AdvanceTo(buffer.GetPosition(4));
+```
 
 这是一个相当实用的设计，它解决了"读了就得用"的问题，不仅可以将不用的数据下次再使用，还可以实现Peek的操作，只读但不改变游标。
 
