@@ -37,14 +37,14 @@ namespace InflySocket
             running = true;
             Task.Run(new Action(() =>
             {
-                ListenConnecting();
+                ListenConnectingAsync();
             }));
             return true;
         }
         /// <summary>
         /// 监听客户端请求的方法；
         /// </summary>
-        private void ListenConnecting()
+        private async Task ListenConnectingAsync()
         {
             while (running)  // 持续不断的监听客户端的连接请求；
             {
@@ -53,16 +53,22 @@ namespace InflySocket
                     Socket sokConnection = socket.Accept(); // 一旦监听到一个客户端的请求，就返回一个与该客户端通信的 套接字；
                     // 将与客户端连接的 套接字 对象添加到集合中；
                     string str_EndPoint = sokConnection.RemoteEndPoint.ToString();
-                    SessionBase myTcpClient = new SessionBase() { TcpSocket = sokConnection, EndPoint = str_EndPoint };
-
+                    SessionBase myTcpClient = new SessionBase() { TcpSocket = sokConnection, EndPoint = str_EndPoint };                    
                     Clients.Add(myTcpClient);
+                    await ProcessLinesAsync(sokConnection);
                 }
-                catch
+                catch(Exception exp)
                 {
 
                 }
                 Thread.Sleep(200);
             }
+        }
+
+        public void Close()
+        {
+            running = false;
+            socket.Close();
         }
         #endregion
 

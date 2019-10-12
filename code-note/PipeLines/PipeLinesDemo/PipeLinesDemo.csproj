@@ -95,11 +95,5 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\InflySocket\InflySocket.csproj">
-      <Project>{d4daf4ab-df65-4859-9f51-652a8315ff4f}</Project>
-      <Name>InflySocket</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

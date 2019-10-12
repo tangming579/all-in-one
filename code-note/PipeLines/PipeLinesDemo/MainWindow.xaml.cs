@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InflySocket;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
@@ -21,15 +22,23 @@ namespace PipeLinesDemo
     /// </summary>
     public partial class MainWindow : Window
     {
+        InflyServer server = new InflyServer();
+
         public MainWindow()
         {
             InitializeComponent();
             Loaded += MainWindow_Loaded;
+            Closing += MainWindow_Closing;
+        }
+
+        private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            server.Close();
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            
+        {            
+            server.Listen(9543);
         }
     }
 }
