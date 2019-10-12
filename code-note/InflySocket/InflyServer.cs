@@ -13,6 +13,7 @@ namespace InflySocket
 {
     public class InflyServer
     {
+        #region Socket
         private bool running;
         private Socket socket;
 
@@ -40,7 +41,6 @@ namespace InflySocket
             }));
             return true;
         }
-
         /// <summary>
         /// 监听客户端请求的方法；
         /// </summary>
@@ -64,6 +64,9 @@ namespace InflySocket
                 Thread.Sleep(200);
             }
         }
+        #endregion
+
+        #region Pipelines
 
         async Task ProcessLinesAsync(Socket socket)
         {
@@ -152,5 +155,6 @@ namespace InflySocket
             //将PipeReader标记为完成
             reader.Complete();
         }
+        #endregion
     }
 }
