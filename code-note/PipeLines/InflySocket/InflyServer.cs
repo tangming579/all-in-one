@@ -143,7 +143,7 @@ namespace InflySocket
                     if (position != null)
                     {
                         // 处理这一行
-                        //ProcessLine(buffer.Slice(0, position.Value));
+                        ProcessLine(buffer.Slice(0, position.Value).ToArray());
 
                         // 跳过 这一行+\n (basically position 主要位置？)
                         buffer = buffer.Slice(buffer.GetPosition(1, position.Value));
@@ -160,6 +160,12 @@ namespace InflySocket
             }
             //将PipeReader标记为完成
             reader.Complete();
+        }
+
+        private void ProcessLine(byte[] data)
+        {
+            string msg = System.Text.Encoding.UTF8.GetString(data);
+            Console.WriteLine(msg);
         }
         #endregion
     }
