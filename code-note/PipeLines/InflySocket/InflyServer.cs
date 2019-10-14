@@ -13,6 +13,10 @@ namespace InflySocket
 {
     public class InflyServer
     {
+        #region Public
+        public char separator = '#';
+        #endregion
+
         #region Socket
         private bool running;
         private Socket socket;
@@ -55,7 +59,8 @@ namespace InflySocket
                     string str_EndPoint = sokConnection.RemoteEndPoint.ToString();
                     SessionBase myTcpClient = new SessionBase() { TcpSocket = sokConnection, EndPoint = str_EndPoint };                    
                     Clients.Add(myTcpClient);
-                    await ProcessLinesAsync(sokConnection);
+                    OnNewConnected(myTcpClient);
+                    await ProcessLinesAsync(sokConnection).ConfigureAwait(false);
                 }
                 catch(Exception exp)
                 {
@@ -70,6 +75,22 @@ namespace InflySocket
             running = false;
             socket.Close();
         }
+
+        protected virtual void OnNewConnected(SessionBase newClient)
+        {
+            Console.WriteLine(newClient.EndPoint);
+        }
+
+        protected virtual void OnReceviceMessage(string msg)
+        {
+            Console.WriteLine(msg);
+        }
+
+        protected virtual void OnClientClose(SessionBase newClient)
+        {
+
+        }
+
         #endregion
 
         #region Pipelines
@@ -138,7 +159,7 @@ namespace InflySocket
                 do
                 {
                     // 在缓冲数据中查找找一个行末尾
-                    position = buffer.PositionOf((byte)'\n');
+                    position = buffer.PositionOf((byte)separator);
 
                     if (position != null)
                     {
@@ -165,7 +186,7 @@ namespace InflySocket
         private void ProcessLine(byte[] data)
         {
             string msg = System.Text.Encoding.UTF8.GetString(data);
-            Console.WriteLine(msg);
+            OnReceviceMessage(msg);
         }
         #endregion
     }
