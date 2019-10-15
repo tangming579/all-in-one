@@ -38,7 +38,12 @@ namespace PipeLinesDemo
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {            
-            server.Listen(9543);
+            server.Listen(9999);
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            server.Send("Hello 你好");
         }
     }
 }

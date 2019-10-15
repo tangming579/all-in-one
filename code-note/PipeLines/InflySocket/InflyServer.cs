@@ -39,16 +39,16 @@ namespace InflySocket
             // 设置监听队列的长度；
             socket.Listen(100);
             running = true;
-            Task.Run(new Action(() =>
+            Task.Run(() =>
             {
                 ListenConnectingAsync();
-            }));
+            });
             return true;
         }
         /// <summary>
         /// 监听客户端请求的方法；
         /// </summary>
-        private async Task ListenConnectingAsync()
+        private void ListenConnectingAsync()
         {
             while (running)  // 持续不断的监听客户端的连接请求；
             {
@@ -60,7 +60,10 @@ namespace InflySocket
                     SessionBase myTcpClient = new SessionBase() { TcpSocket = sokConnection, EndPoint = str_EndPoint };                    
                     Clients.Add(myTcpClient);
                     OnNewConnected(myTcpClient);
-                    await ProcessLinesAsync(sokConnection).ConfigureAwait(false);
+                    Task.Run(() =>
+                    {
+                        ProcessLinesAsync(sokConnection).ConfigureAwait(false);
+                    });                   
                 }
                 catch(Exception exp)
                 {
@@ -74,6 +77,23 @@ namespace InflySocket
         {
             running = false;
             socket.Close();
+        }
+
+        public void Send(byte[] buf)
+        {
+            foreach(var client in Clients)
+            {
+                client.Send(buf);
+            }
+        }
+
+        public void Send(string msg)
+        {
+            var buf = System.Text.Encoding.UTF8.GetBytes(msg);
+            foreach (var client in Clients)
+            {
+                client.Send(buf);
+            }
         }
 
         protected virtual void OnNewConnected(SessionBase newClient)
