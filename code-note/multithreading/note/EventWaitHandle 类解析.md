@@ -33,3 +33,21 @@ EventWaitHandle类拥有两种状态，**终止状态** 和 **非终止状态**�
 - 在ManualReset模式下，当EventWaitHandle对象被置为终止状态时，释放一个被WaitOne阻塞的线程后，其状态不会改变，仍然处于终止状态，所以当ManualReset模式下EventWaitHandle对象处于终止状态时，会连续释放所有被WaitOne方法阻塞的线程，直到手动调用其Reset方法将其置回非终止状态。所以这种模式叫ManualReset模式。
 
 ### AutoResetEvent 与 ManualResetEvent
+
+**AutoResetEvent** 允许线程通过发信号互相通信。 通常，当线程需要独占访问资源时使用该类。
+
+线程通过调用 AutoResetEvent 上的 WaitOne 来等待信号。 如果 AutoResetEvent 为非终止状态，则线程会被阻止，并等待当前控制资源的线程通过调用 Set 来通知资源可用。
+
+调用 Set 向 AutoResetEvent 发信号以释放等待线程。 AutoResetEvent 将保持终止状态，直到一个正在等待的线程被释放，然后自动返回非终止状态。 如果没有任何线程在等待，则状态将无限期地保持为终止状态。
+
+如果当 AutoResetEvent 为终止状态时线程调用 WaitOne，则线程不会被阻止。 AutoResetEvent 将立即释放线程并返回到非终止状态。
+
+**ManualResetEvent** 允许线程通过发信号互相通信。 通常，此通信涉及一个线程在其他线程进行之前必须完成的任务。
+
+当一个线程开始一个活动（此活动必须完成后，其他线程才能开始）时，它调用 Reset 以将 ManualResetEvent 置于非终止状态。 此线程可被视为控制 ManualResetEvent。 调用 ManualResetEvent 上的 WaitOne 的线程将阻止，并等待信号。 当控制线程完成活动时，它调用Set 以发出等待线程可以继续进行的信号。 并释放所有等待线程。
+
+一旦它被终止，ManualResetEvent 将保持终止状态，直到它被手动重置。 即对 WaitOne 的调用将立即返回。
+
+可以通过将布尔值传递给构造函数来控制 ManualResetEvent 的初始状态，如果初始状态处于终止状态，为 true；否则为 false。
+
+ManualResetEvent 也可以同 staticWaitAll 和 WaitAny 方法一起使用。
