@@ -24,7 +24,7 @@
 
 \b并不匹配这些单词分隔字符中的任何一个，它**只匹配一个位置**。
 
-### 2. 元字符
+## 2. 元字符
 
 正则表达式语言由两种基本字符类型组成：原义（正常）文本字符和元字符。元字符使正则表达式具有处理能力。所谓元字符就是指那些在正则表达式中具有特殊意义的专用字符，可以用来规定其前导字符（即位于元字符前面的字符）在目标对象中的出现模式。 
 
@@ -120,3 +120,69 @@
 <pre>
 "(c|g|p)ar" => The <a href="#learn-regex"><strong>car</strong></a> is <a href="#learn-regex"><strong>par</strong></a>ked in the <a href="#learn-regex"><strong>gar</strong></a>age.
 </pre>
+
+### 2.6 `|` 或运算符
+
+或运算符表示或，用作判断条件。
+
+<pre>
+"(T|t)he|car" => <a href="#learn-regex"><strong>The</strong></a> <a href="#learn-regex"><strong>car</strong></a> is parked in <a href="#learn-regex"><strong>the</strong></a> garage.
+</pre>
+
+### 2.7 转码特殊字符
+
+反斜线 `\` 在表达式中用于转码紧跟其后的字符。用于指定 `{ } [ ] / \ + * . $ ^ | ?` 这些特殊字符。如果想要匹配这些特殊字符则要在其前面加上反斜线 `\`。
+
+<pre>
+"(f|c|m)at\.?" => The <a href="#learn-regex"><strong>fat</strong></a> <a href="#learn-regex"><strong>cat</strong></a> sat on the <a href="#learn-regex"><strong>mat.</strong></a>
+</pre>
+
+### 2.8 锚点
+
+在正则表达式中，想要匹配指定开头或结尾的字符串就要使用到锚点。`^` 指定开头，`$` 指定结尾。
+
+#### 2.8.1 `^` 号
+
+`^` 用来检查匹配的字符串是否在所匹配字符串的开头。
+
+例如，在 `abc` 中使用表达式 `^a` 会得到结果 `a`。但如果使用 `^b` 将匹配不到任何结果。因为在字符串 `abc` 中并不是以 `b` 开头。
+
+例如，`^(T|t)he` 匹配以 `The` 或 `the` 开头的字符串。
+
+<pre>
+"(T|t)he" => <a href="#learn-regex"><strong>The</strong></a> car is parked in <a href="#learn-regex"><strong>the</strong></a> garage.
+</pre>
+
+#### 2.8.2 `####  号
+
+同理于 `^` 号，`$` 号用来匹配字符是否是最后一个。
+
+例如，`(at\.)$` 匹配以 `at.` 结尾的字符串。
+
+<pre>
+"(at\.)" => The fat c<a href="#learn-regex"><strong>at.</strong></a> s<a href="#learn-regex"><strong>at.</strong></a> on the m<a href="#learn-regex"><strong>at.</strong></a>
+</pre>
+
+<pre>
+"(at\.)$" => The fat cat. sat. on the m<a href="#learn-regex"><strong>at.</strong></a>
+</pre>
+
+## 3. 简写字符集
+
+正则表达式提供一些常用的字符集简写。如下：
+
+| 简写 | 描述                                               |
+| ---- | -------------------------------------------------- |
+| .    | 除换行符外的所有字符                               |
+| \w   | 匹配所有字母数字，等同于 `[a-zA-Z0-9_]`            |
+| \W   | 匹配所有非字母数字，即符号，等同于： `[^\w]`       |
+| \d   | 匹配数字： `[0-9]`                                 |
+| \D   | 匹配非数字： `[^\d]`                               |
+| \s   | 匹配所有空格字符，等同于： `[\t\n\f\r\p{Z}]`       |
+| \S   | 匹配所有非空格字符： `[^\s]`                       |
+| \f   | 匹配一个换页符                                     |
+| \n   | 匹配一个换行符                                     |
+| \r   | 匹配一个回车符                                     |
+| \t   | 匹配一个制表符                                     |
+| \v   | 匹配一个垂直制表符                                 |
+| \p   | 匹配 CR/LF（等同于 `\r\n`），用来匹配 DOS 行终止符 |
