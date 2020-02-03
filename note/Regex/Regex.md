@@ -4,10 +4,7 @@
 
 ### 目录
 
-- [1.基本匹配](#1-基本匹配)
-- [2.元字符](#2-元字符)
-  - 2.1 点子字符集
-- 3.简写字符集
+[TOC]
 
 ## 1.基本匹配
 
@@ -21,7 +18,7 @@
 
 \b并不匹配这些单词分隔字符中的任何一个，它**只匹配一个位置**。
 
-### 元字符
+### 2. 元字符
 
 正则表达式语言由两种基本字符类型组成：原义（正常）文本字符和元字符。元字符使正则表达式具有处理能力。所谓元字符就是指那些在正则表达式中具有特殊意义的专用字符，可以用来规定其前导字符（即位于元字符前面的字符）在目标对象中的出现模式。 
 
@@ -40,7 +37,37 @@
 | ^      | 从开始行开始匹配.                                            |
 | $      | 从末端开始匹配.                                              |
 
-### 字符串转义
-
 如想查找元字符本身，比如 . 或  * ，则没法直接指定，因为他们会被解释成别的意思。这是就必须使用 \ 取消字符特殊意义。因此，应该使用  \\. 和 \\* 。当然，要查找 \\ 本身，也得使用 \\\
+
+### 2.1 点运算符
+
+`.`是元字符中最简单的例子。 `.`匹配任意单个字符，但不匹配换行符。 例如，表达式`.ar`匹配一个任意字符后面跟着是`a`和`r`的字符串。
+
+<pre>
+".ar" => The <a href="#learn-regex"><strong>car</strong></a> <a href="#learn-regex"><strong>par</strong></a>ked in the <a href="#learn-regex"><strong>gar</strong></a>age.
+</pre>
+
+### 2.2 字符集
+
+字符集也叫做字符类。 方括号用来指定一个字符集。 在方括号中使用连字符来指定字符集的范围。 在方括号中的字符集不关心顺序。 例如，表达式`[Tt]he` 匹配 `the` 和 `The`。
+
+<pre>
+"[Tt]he" => <a href="#learn-regex"><strong>The</strong></a> car parked in <a href="#learn-regex"><strong>the</strong></a> garage.
+</pre>
+
+方括号的句号就表示句号。 表达式 `ar[.]` 匹配 `ar.`字符串
+
+<pre>
+"ar[.]" => A garage is a good place to park a c<a href="#learn-regex"><strong>ar.</strong></a>
+</pre>
+
+#### 2.2.1 否定字符集
+
+一般来说 `^` 表示一个字符串的开头，但它用在一个方括号的开头的时候，它表示这个字符集是否定的。 例如，表达式`[^c]ar` 匹配一个后面跟着`ar`的除了`c`的任意字符。
+
+<pre>
+"[^c]ar" => The car <a href="#learn-regex"><strong>par</strong></a>ked in the <a href="#learn-regex"><strong>gar</strong></a>age.
+</pre>
+
+### 2.3 重复次数
 
