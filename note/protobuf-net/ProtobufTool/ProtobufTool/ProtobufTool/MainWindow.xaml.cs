@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -29,6 +30,7 @@ namespace ProtobufTool
 
         private void btnCreate_Click(object sender, RoutedEventArgs e)
         {
+            txbOutput.Clear();
             switch (cobVersion.SelectedIndex)
             {
                 case 0: txbOutput.Text = protogen(); break;
@@ -39,7 +41,7 @@ namespace ProtobufTool
         //生成proto3
         public string protoc()
         {
-            string command = $@".\protoc.exe --proto_path=protos --csharp_out=gen Proto3.proto";
+            string command = $@".\protoc.exe --proto_path=gen --csharp_out=gen test.proto";
 
             Process pro = new Process();
             pro.StartInfo.FileName = "cmd.exe";
@@ -65,12 +67,13 @@ namespace ProtobufTool
         //老版protogen生成器，只可生成proto2
         public string protogen()
         {
-            string outputPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "gen");
+            string outputPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "output");
             if (!Directory.Exists(outputPath))
             {
                 Directory.CreateDirectory(outputPath);
             }
-            string command = $@"ProtoGen\protogen.exe -i:protos\Proto2.proto -o:{outputPath}\Proto2.cs";
+            //string command = $@"ProtoGen\protogen.exe -i:protos\Proto2.proto -o:output\Proto2.cs";
+            string command = $@"ProtoGen\protogen.exe -i:output\MQMessage.cs -o:protos\Proto2.proto";
 
             Process pro = new Process();
             pro.StartInfo.FileName = "cmd.exe";
@@ -85,9 +88,10 @@ namespace ProtobufTool
             pro.Start();//开启cmd
             pro.StandardInput.WriteLine(command);
             pro.StandardInput.AutoFlush = true;
-            pro.StandardInput.WriteLine("exit"); //若是运行时间短可加入此命令
+            //pro.StandardInput.WriteLine("exit"); //若是运行时间短可加入此命令
 
             string output = pro.StandardOutput.ReadToEnd();
+            //pro.StandardInput.WriteLine("exit");
             pro.WaitForExit();//若运行时间长,使用这个,等待程序执行完退出进程
             pro.Close();
             return output;
@@ -95,7 +99,19 @@ namespace ProtobufTool
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-
+            var fileType = cobType.SelectedIndex == 0 ? "proto" : "cs";
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Title = "选择文件";
+            openFileDialog.Filter = $"{fileType}文件|*.{fileType}|所有文件|*.*";
+            openFileDialog.FileName = string.Empty;
+            openFileDialog.FilterIndex = 1;
+            openFileDialog.RestoreDirectory = true;
+            //openFileDialog.DefaultExt = "cs";
+            var result = openFileDialog.ShowDialog();
+            if (result == true)
+            {
+                txbOriginal.Text = openFileDialog.FileName;
+            }            
         }
     }
 }
