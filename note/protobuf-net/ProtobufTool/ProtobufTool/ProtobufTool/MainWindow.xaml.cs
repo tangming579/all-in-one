@@ -31,8 +31,8 @@ namespace ProtobufTool
         {
             switch (cobVersion.SelectedIndex)
             {
-                //case 0: txbOutput.Text = protogen(); break;
-                //case 1: txbOutput.Text = protoc(); break;
+                case 0: txbOutput.Text = protogen(); break;
+                case 1: txbOutput.Text = protoc(); break;
             }
         }
 
@@ -91,6 +91,11 @@ namespace ProtobufTool
             pro.WaitForExit();//若运行时间长,使用这个,等待程序执行完退出进程
             pro.Close();
             return output;
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

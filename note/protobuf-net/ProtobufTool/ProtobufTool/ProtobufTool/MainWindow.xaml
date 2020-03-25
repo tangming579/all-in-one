@@ -24,8 +24,8 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                 <TextBlock Width="80" HorizontalAlignment="Right" TextAlignment="Right" Text="原始文件：" VerticalAlignment="Center"/>
-                <TextBox MinWidth="200" Margin="0,0,10,0"></TextBox>
-                <Button Content="打开文件……"></Button>
+                <TextBox x:Name="txbOriginal" MinWidth="200" Margin="0,0,10,0"></TextBox>
+                <Button Content="打开文件……" Click="Button_Click"></Button>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Margin="0,10,0,0">
                 <TextBlock Width="80" HorizontalAlignment="Right" TextAlignment="Right" Text="输出路径：" VerticalAlignment="Center"/>
