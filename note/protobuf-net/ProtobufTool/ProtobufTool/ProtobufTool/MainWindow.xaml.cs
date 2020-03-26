@@ -87,7 +87,7 @@ namespace ProtobufTool
 
             var cmd = new Process();
             cmd.StartInfo.FileName = "cmd.exe";
-            cmd.StartInfo.Arguments = "";//“/C”表示执行完命令后马上退出 
+            //cmd.StartInfo.Arguments = "";//“/C”表示执行完命令后马上退出 
 
             cmd.StartInfo.CreateNoWindow = true;         // 不创建新窗口    
             cmd.StartInfo.UseShellExecute = false;       //不启用shell启动进程  
