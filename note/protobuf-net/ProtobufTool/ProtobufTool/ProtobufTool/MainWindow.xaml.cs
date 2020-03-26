@@ -85,67 +85,27 @@ namespace ProtobufTool
             string command = $@"ProtoGen\protogen.exe -i:input\{fileName} -o:output\{fileName.Replace(".proto",".cs")}";
             //string command = $@"ProtoGen\protogen.exe -i:protos\Proto2.proto -o:protos\{fileName}";
 
-            //Process pro = new Process();
-            //pro.StartInfo.FileName = "cmd.exe";
+            var cmd = new Process();
+            cmd.StartInfo.FileName = "cmd.exe";
+            cmd.StartInfo.Arguments = "";//“/C”表示执行完命令后马上退出 
 
-            //pro.StartInfo.CreateNoWindow = true;         // 不创建新窗口    
-            //pro.StartInfo.UseShellExecute = false;       //不启用shell启动进程  
-            //pro.StartInfo.RedirectStandardInput = true;  // 重定向输入    
-            //pro.StartInfo.RedirectStandardOutput = true; // 重定向标准输出    
-            //pro.StartInfo.RedirectStandardError = true;
-            //// 重定向错误输出  
-            //pro.StartInfo.WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory;
-            //pro.Start();//开启cmd            
-            //pro.StandardInput.WriteLine(command);
-            //pro.StandardInput.AutoFlush = true;
-            //pro.StandardInput.WriteLine("exit"); //若是运行时间短可加入此命令
+            cmd.StartInfo.CreateNoWindow = true;         // 不创建新窗口    
+            cmd.StartInfo.UseShellExecute = false;       //不启用shell启动进程  
+            cmd.StartInfo.RedirectStandardInput = true;  // 重定向输入    
+            cmd.StartInfo.RedirectStandardOutput = true; // 重定向标准输出    
+            cmd.StartInfo.RedirectStandardError = true;
+            // 重定向错误输出  
+            cmd.StartInfo.WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            cmd.Start();//开启cmd            
+            cmd.StandardInput.WriteLine(command);
+            cmd.StandardInput.AutoFlush = true;
+            cmd.StandardInput.WriteLine("exit"); //若是运行时间短可加入此命令
 
-            //string output = pro.StandardOutput.ReadToEnd();
-            ////pro.StandardInput.WriteLine("exit");
-            //pro.WaitForExit();//若运行时间长,使用这个,等待程序执行完退出进程
-            //pro.Close();
-            //return output;
-
-            //创建一个进程
-            Process process = new Process();
-            process.StartInfo.FileName = "cmd.exe";
-
-            // 必须禁用操作系统外壳程序
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.CreateNoWindow = true;
-            process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.RedirectStandardError = true;
-
-            process.StartInfo.WorkingDirectory = AppDomain.CurrentDomain.BaseDirectory;
-            //启动进程
-            process.Start();
-
-            process.StandardInput.WriteLine(command);
-            process.StandardInput.AutoFlush = true;
-            //准备读出输出流和错误流
-            string outputData = string.Empty;
-            string errorData = string.Empty;
-            process.BeginOutputReadLine();
-            process.BeginErrorReadLine();
-
-            process.OutputDataReceived += (sender, e) =>
-            {
-                outputData += (e.Data + "\n");
-            };
-
-            process.ErrorDataReceived += (sender, e) =>
-            {
-                errorData += (e.Data + "\n");
-            };
-
-            //等待退出
-            process.WaitForExit();
-
-            //关闭进程
-            process.Close();
-
-            //返回流结果
-            return outputData;
+            string output = cmd.StandardOutput.ReadToEnd();
+            //pro.StandardInput.WriteLine("exit");
+            cmd.WaitForExit();//若运行时间长,使用这个,等待程序执行完退出进程
+            cmd.Close();
+            return output;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -168,6 +128,6 @@ namespace ProtobufTool
         private void btnCreateAll_Click(object sender, RoutedEventArgs e)
         {
 
-        }
+        }      
     }
 }
