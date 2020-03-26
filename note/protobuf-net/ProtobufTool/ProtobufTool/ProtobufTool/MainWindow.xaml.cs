@@ -30,18 +30,25 @@ namespace ProtobufTool
 
         private void btnCreate_Click(object sender, RoutedEventArgs e)
         {
+            if (string.IsNullOrEmpty(txbOriginal.Text) || !File.Exists(txbOriginal.Text))
+            {
+                MessageBox.Show("文件不存在！");
+                return;
+            }
+            FileInfo file = new FileInfo(txbOriginal.Text);
             txbOutput.Clear();
+            string fileName = file.Name.Replace(file.Extension, "");
             switch (cobVersion.SelectedIndex)
             {
-                case 0: txbOutput.Text = protogen(); break;
-                case 1: txbOutput.Text = protoc(); break;
+                case 0: txbOutput.Text = protogen(fileName); break;
+                case 1: txbOutput.Text = protoc(fileName); break;
             }
         }
 
         //生成proto3
-        public string protoc()
+        public string protoc(string fileName)
         {
-            string command = $@".\protoc.exe --proto_path=gen --csharp_out=gen test.proto";
+            string command = $@".\protoc.exe --proto_path=input --csharp_out=output {fileName}";
 
             Process pro = new Process();
             pro.StartInfo.FileName = "cmd.exe";
@@ -65,7 +72,7 @@ namespace ProtobufTool
         }
 
         //老版protogen生成器，只可生成proto2
-        public string protogen()
+        public string protogen(string fileName)
         {
             string outputPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "output");
             if (!Directory.Exists(outputPath))
@@ -111,7 +118,12 @@ namespace ProtobufTool
             if (result == true)
             {
                 txbOriginal.Text = openFileDialog.FileName;
-            }            
+            }
+        }
+
+        private void btnCreateAll_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
