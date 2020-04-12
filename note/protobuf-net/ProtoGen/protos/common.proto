@@ -1,0 +1,6 @@
+// 每个消息结构的起始部分由消息头组成
+message MsgHeader {
+  required string src = 1;    // 消息的来源。设备ID，必须确保全局唯一 ,最大长度30
+  required double time = 2;		// 消息生成的时间点，自Unix新世纪（January 1, 1970）以来经过的秒数
+  optional string guid = 3; // 用于唯一标识消息，目前设计目的是与回复消息对应
+}
