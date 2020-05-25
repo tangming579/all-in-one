@@ -1,0 +1,207 @@
+import "common.proto";
+//----------------------------------------
+// 设备注册消息
+//----------------------------------------
+message SG_DeviceRegMsg {
+  // 消息头
+  required MsgHeader header = 1;
+
+  // 设备型号ID
+  required uint32 device_type = 2; 
+
+  // 设备唯一码（识别号）
+  required string device_id = 3;
+
+  // 设备IP地址
+  required string ip = 4;
+
+  // 设备描述信息，在设备软件初始化时由安装人员指定（选择或录入）
+  required string description = 5;
+   //设备编号
+  optional string device_serial_no = 6;
+  //设备协议版本
+  optional string device_protocol_version = 7;
+
+  optional string device_softwareversion = 8; //设备协议软件版本
+  optional string device_mcuversion = 9; //设备协议mcu版本
+  optional string device_algorithmversion = 10; //设备协议人证对比版本
+}
+
+//----------------------------------------
+// 设备注册回应消息
+//----------------------------------------
+message SG_DeviceRegEchoMsg {
+  // 消息头
+  required MsgHeader header = 1;
+
+  // 设备注册结果枚举定义
+  enum RegResultType {
+    SUCCESSFUL = 0;
+    FAILED = 1;
+  }
+
+  // 离线上传顺序
+  enum OfflineUploadOrderType {
+    OldestFirst = 0;
+    NewestFirst = 1;
+  }
+
+  // 设备注册结果
+  required RegResultType result = 2;
+
+  // 注册错误信息，仅在result为FAILED时提供
+  optional string error_message = 3;
+
+  // 心跳消息超时时间（单位：秒）
+  optional uint32 heartbeat_timeout = 4 [default = 5];	
+
+  // 发送心跳消息时间间隔（单位：秒）
+  optional uint32 heartbeat_interval = 5 [default = 5]; 
+
+  // 图像上传路径
+  required string image_upload_path = 6;
+
+  // 离线上传顺序
+  optional OfflineUploadOrderType offline_upload_order = 7 [default = OldestFirst];
+}
+// 设备端通知关机
+message SG_DeviceUnRegMsg {
+  required MsgHeader header = 1;
+  optional string device_id = 2;  // 设备ID，NIS新增
+}
+
+// 服务端回应关机通知
+message SG_DeviceUnRegEchoMsg {
+  required MsgHeader header = 1;
+}
+
+// 设备模式
+enum DeviceModeType {
+	VERIFICATION     = 0;                       // 验证模式
+	MAINTAIN         = 1;                       // 维护模式
+	PASSTHROUGH      = 2;                       // 应急直通模式
+};
+
+
+//----------------------------------------
+// 设备端连接的心跳消息
+//----------------------------------------
+message SG_DeviceStateMsg {
+  required MsgHeader header = 1;
+	// 设备工作状态定义
+	enum DeviceStateType {
+		INIT     = 0;                       // 初始化
+		NORMAL   = 1;                       // 正常
+		FAILURE  = 2;                       // 故障
+		OFFLINE  = 3;                       // 关机（离线）
+	};
+   
+  required DeviceStateType work_state = 2; // 设备状态
+  required DeviceModeType device_mode = 3;   // 设备模式
+  optional double current_time = 4;   // 设备端当前时间，为从1970年1月1日起的秒数
+  optional uint32 error_code = 5;     //故障码
+  optional bytes error_desc = 6;      //故障描述
+}
+
+// 服务器端对设备端连接心跳消息的回应
+message SG_DeviceStateEchoMsg {
+  required MsgHeader header = 1;
+  // 服务器工作状态定义
+  enum ServerStateType {
+    READY    = 0;   // 就绪状态[服务器工作正常]
+    NOT_READY  = 1; // 服务器暂不可用
+  };
+  required ServerStateType server_state = 2; // 服务器状态
+  optional double current_time = 3; //服务当前时间，为从1970年1月1日起的秒数
+}
+
+//---------------------------------------------------
+//远程诊断相关消息
+// 通讯时机：管理员发出远程诊断指令时
+// 通讯过程：
+// 1. NIS --DiagnoseRequestMsg--> Dev
+// 2. Dev --SG_DiagnoseRequestEchoMsg --> NIS
+// 3. 完成诊断后：Dev --DiagnoseDataMsg--> NIS
+//---------------------------------------------------
+// 服务器发出诊断指令
+message SG_DiagnoseRequestMsg {
+  required MsgHeader header = 1;
+}
+
+//诊断指令回应消息
+message SG_DiagnoseRequestEchoMsg
+{
+  required MsgHeader header = 1;
+  required uint32 result= 2;      //结果：1成功  0失败
+  optional string fail_reason=3;  //失败原因
+  optional string error_code=4;//错误码
+}
+
+// 设备诊断数据
+message SG_DiagnoseDataMsg {
+  required MsgHeader header = 1;
+  required double diagnose_time = 2;		    // 诊断报告生成时间 
+  required double status_disk = 3;          //磁盘使用百分比
+  optional string status_passport = 4;      //护照读取器状态
+  optional string status_sensor = 5;        //传感器状态
+  optional string status_transmission = 6;  //传动设备状态
+  optional string status_face = 7;          //人脸识别设备状态
+  optional string status_mcu = 8;           //mcu状态
+  optional string status_camera = 9;        //摄像头状态
+}
+
+// Device 心跳超时消息。由服务端心跳检测代码在设备端心跳超时时发出
+message SG_DeviceHeartbeatTimeoutMsg {
+  required MsgHeader header = 1;
+  required string device_id = 2;    // 设备端ID
+  required string device_description = 3;	//设备端描述
+}
+
+//设备改变状态请求消息
+message SG_DeviceStateChangeRequestMsg {
+  required MsgHeader header = 1;
+	// 设备工作状态定义
+	enum DeviceStateType {
+		INIT     = 0;                       // 初始化
+		NORMAL   = 1;                       // 就绪
+		FAILURE  = 2;                       // 故障
+		OFFLINE  = 3;                       // 关机（离线）
+	};
+  required DeviceStateType work_state = 2; // 设备状态
+}
+
+enum DeviceControlType {
+		SOFTRESET  = 1;		//软复位
+		COMPUTERESET  = 2;		//计算机重启
+    
+};
+
+//设备远程控制消息定义
+message SG_DeviceControlMsg{
+	required MsgHeader header = 1;
+	required string device_id = 2;//设备编号	
+	required DeviceControlType control_type = 3;  //具体动作
+}
+message SG_DeviceControlEchoMsg{
+	required MsgHeader header = 1;
+	required string device_id = 2;//设备编号
+	required DeviceControlType control_type = 3;  //具体动作		
+  required uint32 result = 4; // 0-成功；1-失败
+  optional string desc = 5; // 执行结果描述，当执行失败时，说明失败原因。编码格式utf-8。
+}
+
+//实时切换设备运行模式消息
+message SG_DeviceRunModeSwitchMsg
+{
+  required MsgHeader header = 1;
+  required DeviceModeType device_mode = 2;     // 最初定义：1直通模式（conveyor mode） 2扫描模式,须与其它有运行模式的消息保持一致 
+}
+
+//切换设备运行模式回应消息
+message SG_DeviceRunModeSwitchEchoMsg
+{
+  required MsgHeader header = 1;
+  required uint32 result= 2;      //结果：1成功  0失败
+  optional string fail_reason=3;  //失败原因
+  optional string error_code=4;//错误码
+}

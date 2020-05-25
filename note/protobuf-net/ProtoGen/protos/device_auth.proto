@@ -1,0 +1,30 @@
+//引用common.proto定义
+import "common.proto";
+
+enum EventLevel {
+	INFO=1;  //信息
+	KEY=2;    //关键
+	WARN=3;   //警告
+	ERROR_LEVEL=4;  //错误
+};
+
+enum DeviceEventType {
+	POWER_ON= 1;        				// 设备开机
+	POWER_OFF=2;                     	// 设备关机
+	VERIFICATION_FAILURE= 3;			// 刷证件失败
+	UPDATE=4;                        	// 软件升级
+	OTHER_OPERATION=5;                	// 其他操作
+	FAULT=6;     						// 设备故障
+	FAULT_RECOVERY=7;           		// 故障恢复
+};
+
+//设备事件日志消息
+//设备记录事件日志时，SCS通过Plugin_DeviceNIS将日志信息发送给NIS
+message SG_DeviceEventLogMsg {
+ 	required MsgHeader header = 1; 
+	required string device_id= 2;	//设备ID ，最大长度32
+	required DeviceEventType event_id = 3;	//事件ID
+	required double event_start_time = 4; //事件发生时间，从1970年1月1日起的秒数
+	optional bytes description= 5;	//事件描述
+	required EventLevel event_level = 6;	//等级
+}

@@ -1,0 +1,80 @@
+//引用common.proto定义
+import "common.proto";
+
+
+// 离线上传顺序
+enum OfflineUploadOrderType {
+  OldestFirst = 0;
+  NewestFirst = 1;
+}
+
+message SG_DeviceCommonParamMsg {
+  required MsgHeader header = 1;  
+  
+  // 心跳消息超时时间（单位：秒）
+  optional uint32 heartbeat_timeout = 2 [default = 5];	
+  // 发送心跳消息时间间隔（单位：秒）
+  optional uint32 heartbeat_interval = 3 [default = 5];
+}
+
+message SG_DeviceStoreParamMsg {
+  required MsgHeader header = 1;
+  
+  // 图像上传路径，字符长度32
+  required string image_upload_path = 2;                                                
+  // 离线上传顺序
+  optional OfflineUploadOrderType offline_upload_order = 3 [default = OldestFirst];
+}
+
+//设备信息变化消息
+message SG_DeviceInfoChangeMsg {
+  required MsgHeader header = 1;
+	required string device_id = 2;          //设备编号，字符长度32
+	required string device_position = 3;    //设备位置
+  required string image_upload_path = 4;  //上传路径
+  optional string device_name = 5;        //设备名称
+  optional string device_tunnel = 6;      //设备通道
+}
+
+//设备通行记录上传
+message SG_UploadPassRecordMsg {
+  required MsgHeader header = 1;
+
+  // 通行结果
+  enum PassResultType {
+    NORMAL = 0;           //正常通过
+    FACENOTFOUND = 1;     //未检测到人脸
+    COMPAREFAILED = 2;    //人脸对比失败
+    MULTIPLEFACE = 3;     //多张人脸
+    RISKPERSON = 4;       //风险布控人员
+  }
+
+  // 证件类型
+  enum CertificateType {
+    PASSPORT = 0;           //护照
+    IDCARD = 1;             //身份证
+    ICCARD = 2;             //IC卡
+    BOARDINGPASS = 3;       //登机牌
+  }
+
+  required string device_id = 2;//设备编号，字符长度32
+  required string record_id = 3;//上传记录id，建议格式：WePass-S0000120200327000001
+  required uint32 device_type = 4;//设备类型
+  required string pass_result = 5;//通行结果
+  required double start_time = 6;//开始时间，Unix时间戳，自1970-01-01 00:00:00 UTC以来经过的秒数
+  required double end_time = 7;//结束时间，Unix时间戳，自1970-01-01 00:00:00 UTC以来经过的秒数
+  optional string certificate_photo = 8;//证件照片地址
+  optional string face_photo = 9;//人脸照片地址
+  optional PassResultType risk_level = 10;//风险等级
+  required CertificateType certificate_type=11;//证件类型
+  optional uint32 certificate_no=12;//证件号码
+  optional uint32 certificate_period=13;//证件有效期
+  optional uint32 passenger_name=14;//旅客姓名
+  optional string compare_result=16;//人证对比结果
+  optional string risk_control=17;//是否为控人员
+}
+//设备通行记录上传
+message SG_UploadPassRecorEchodMsg {
+  required MsgHeader header = 1;
+  required string record_id = 2;//上传记录id
+}
