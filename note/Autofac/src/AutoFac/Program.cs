@@ -49,6 +49,23 @@ namespace AutoFac
                       };
             }
         }
+        public class DBMovieFinder : IMovieFinder
+        {
+            public List<Movie> FindAll()
+            {
+                return new List<Movie>
+                      {
+                          new Movie
+                              {
+                                  Name = "Davi.wmv"
+                              },
+                          new Movie
+                              {
+                                  Name = "Tom.MPG"
+                              }
+                      };
+            }
+        }
         static void Main(string[] args)
         {
             var builder = new ContainerBuilder();
