@@ -71,11 +71,15 @@ namespace AutoFac
             var builder = new ContainerBuilder();
             //注册ListMovieFinder类型，这里的AsImplementedInterfaces表示以接口的形式注册
             builder.RegisterType<ListMovieFinder>().AsImplementedInterfaces();
+            //builder.RegisterType<ListMovieFinder>().As<IMovieFinder>();
+            //builder.RegisterType<ListMovieFinder>().Named<IMovieFinder>("list");
+
             //注册MPGMovieLister类型
             builder.RegisterType<MPGMovieLister>();
             var _container = builder.Build();
 
             var lister = _container.Resolve<MPGMovieLister>();
+            //var listFinder = (ListMovieFinder)_container.ResolveNamed<IMovieFinder>("list");
 
             foreach (var movie in lister.GetMPG())
             {
