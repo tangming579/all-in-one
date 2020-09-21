@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Autofac.Extras.DynamicProxy;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -12,6 +15,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using WebAPI.AOP;
+using WebAPI.Models;
 
 namespace WebAPI
 {
@@ -39,14 +44,7 @@ namespace WebAPI
         // Don't build the container; that gets done for you by the factory.
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            //// Register your own things directly with Autofac, like:
-            //builder.RegisterModule(new MyApplicationModule());
-
-            //获取所有控制器类型并使用属性注入
-            var controllerBaseType = typeof(ControllerBase);
-            builder.RegisterAssemblyTypes(typeof(Program).Assembly)
-                .Where(t => controllerBaseType.IsAssignableFrom(t) && t != controllerBaseType)
-                .PropertiesAutowired();
+            builder.RegisterModule<AutofacModuleRegister>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
