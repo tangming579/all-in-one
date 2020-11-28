@@ -1,9 +1,11 @@
 ﻿using CefSharp;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Script.Serialization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -24,38 +26,65 @@ namespace WpfCef
         public MainWindow()
         {
             InitializeComponent();
+            Loaded += MainWindow_Loaded;
+           
+            //browser.JavascriptObjectRepository.ResolveObject += JavascriptObjectRepository_ResolveObject;
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            //browser.ShowDevTools();
+            this.browser.Address = AppDomain.CurrentDomain.BaseDirectory + @"index.html";
 
             CefSharpSettings.LegacyJavascriptBindingEnabled = true;
-
-            this.browser.Address = AppDomain.CurrentDomain.BaseDirectory + @"index.html";
-            //browser.JavascriptObjectRepository.ResolveObject += JavascriptObjectRepository_ResolveObject;
+            browser.JavascriptObjectRepository.Register("boundAsync", new BoundObject(), true, BindingOptions.DefaultBinder);
         }
 
         private void JavascriptObjectRepository_ResolveObject(object sender, CefSharp.Event.JavascriptBindingEventArgs e)
         {
             var repo = e.ObjectRepository;
-            if (e.ObjectName == "bound")
+            if (e.ObjectName == "boundAsync")
             {
-                repo.Register("bound", new JsEvent(), isAsync: true,
-                    options: new BindingOptions()
-                    {
-                        
-                    });
+                
             }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var jsons = "hello";
-            var js= $"test1({jsons});";
-            browser.GetBrowser().MainFrame.ExecuteJavaScriptAsync(js);
+            var obj = new Model();
+            obj.name = "hello";
+            obj.age = 2;
+            var jsons = new JavaScriptSerializer().Serialize(obj);
+            string js = $"test1({jsons});";
+            browser.ExecuteScriptAsync(js);
         }
 
         private async void Button_Click1(object sender, RoutedEventArgs e)
         {
-            string script = "";
-            var response = await browser.EvaluateScriptAsync(script);
+            var obj = new JObject();
+            obj["name"] = "hello";
+            obj["age"] = 12;
+            string js = $"test2({obj});";
+            var response = await browser.EvaluateScriptAsync(js);
             MessageBox.Show(response.Result + "");
+        }
+
+        public class Model
+        {
+            public string name { get; set; }
+            public int age { get; set; }
+        }
+
+        public class BoundObject
+        {
+            public int Add(int a, int b)
+            {
+                return a + b;
+            }
+            public void showMessage(string msg)
+            {
+                MessageBox.Show(msg);
+            }
         }
     }
 }

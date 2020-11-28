@@ -1,16 +1,30 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
-<body>aaaaa
-<script type="text/javascript">
-    function test1(listdata) {
-		
-		alert(listdata)
-	}
+<body>
+    <script type="text/javascript">
+        function test1(listdata) {
 
-</script>
+            alert(listdata["age"])
+        }
+        function test2(listdata) {
+
+            return listdata["age"]
+        }
+        (async function () {
+            await CefSharp.BindObjectAsync("boundAsync");
+
+            //The default is to camel case method names (the first letter of the method name is changed to lowercase)
+            boundAsync.add(16, 2).then(function (actualResult) {
+                const expectedResult = 18;
+                assert.equal(expectedResult, actualResult, "Add 16 + 2 resulted in " + expectedResult);
+            });
+        })();
+    </script>
+    <input type="button" onclick="test3()"
+           value="Display alert box" />
 </body>
 </html>
