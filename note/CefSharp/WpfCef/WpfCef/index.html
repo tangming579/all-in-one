@@ -5,6 +5,13 @@
     <title>Title</title>
 </head>
 <body>
+    <script>
+        window.onload = function () {
+            loadScrollWidth(2);
+            // 新式注入
+            CefSharp.BindObjectAsync("bound");
+        }
+    </script>
     <script type="text/javascript">
         function test1(listdata) {
 
@@ -14,7 +21,7 @@
 
             return listdata["age"]
         }
-        (async function () {
+        (async function test3() {
             await CefSharp.BindObjectAsync("boundAsync");
 
             //The default is to camel case method names (the first letter of the method name is changed to lowercase)
