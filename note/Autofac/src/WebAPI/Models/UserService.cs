@@ -16,5 +16,11 @@ namespace WebAPI.Models
             Console.WriteLine("新增用户到数据库中");
             return 1;
         }
+
+        public int RemoveUser(string strName)
+        {
+            Console.WriteLine("删除数据库用户中");
+            return 1;
+        }
     }
 }

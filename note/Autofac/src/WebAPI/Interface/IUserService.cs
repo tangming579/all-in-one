@@ -9,5 +9,7 @@ namespace WebAPI.Interface
     public interface IUserService
     {
         int AddUser(string strName, int nAge);
+
+        int RemoveUser(string strName);
     }
 }

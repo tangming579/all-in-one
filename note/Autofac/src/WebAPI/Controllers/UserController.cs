@@ -29,5 +29,13 @@ namespace WebAPI.Controllers
             _userService.AddUser(name, age);
             return Ok("Success!!");
         }
+
+        [HttpGet]
+        [Microsoft.AspNetCore.Mvc.Route("RemoveUser")]
+        public IActionResult RemoveUser(string name)
+        {
+            _userService.RemoveUser(name);
+            return Ok("Success!!");
+        }
     }
 }

@@ -38,10 +38,10 @@ namespace WebAPI.Models
             //    .InterceptedBy(typeof(UserAop))//指定拦截器，可以指定多个
             //    .PropertiesAutowired();
 
-            //注册用户维护业务层
 
             //注册AOP拦截器
             builder.RegisterType(typeof(UserAop));
+
             builder.RegisterAssemblyTypes(typeof(Program).Assembly)
                 .AsImplementedInterfaces()
                 .EnableInterfaceInterceptors()//开启切面，需要引入Autofac.Extras.DynamicProxy
