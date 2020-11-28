@@ -7,9 +7,7 @@
 <body>
     <script>
         window.onload = function () {
-            loadScrollWidth(2);
-            // 新式注入
-            CefSharp.BindObjectAsync("bound");
+            CefSharp.BindObjectAsync("boundAsync");
         }
     </script>
     <script type="text/javascript">
@@ -21,17 +19,15 @@
 
             return listdata["age"]
         }
-        (async function test3() {
-            await CefSharp.BindObjectAsync("boundAsync");
-
-            //The default is to camel case method names (the first letter of the method name is changed to lowercase)
-            boundAsync.add(16, 2).then(function (actualResult) {
-                const expectedResult = 18;
-                assert.equal(expectedResult, actualResult, "Add 16 + 2 resulted in " + expectedResult);
-            });
-        })();
+        async function test3() {
+            await boundAsync.showMessage("aaaa")
+        }
+        async function test4() {
+            sum = await boundAsync.add(6, 7)
+            alert(sum)
+        }
     </script>
-    <input type="button" onclick="test3()"
-           value="Display alert box" />
+    <input type="button" onclick="test3()" value="showMessage" />
+    <input type="button" onclick="test4()" value="Add" />
 </body>
 </html>

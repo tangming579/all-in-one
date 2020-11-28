@@ -28,7 +28,7 @@ namespace WpfCef
         {
             InitializeComponent();
             Loaded += MainWindow_Loaded;
-           
+
             //browser.JavascriptObjectRepository.ResolveObject += JavascriptObjectRepository_ResolveObject;
         }
 
@@ -56,7 +56,7 @@ namespace WpfCef
                 BindingOptions bindingOptions = null; //Binding options is an optional param, defaults to null
                 bindingOptions = BindingOptions.DefaultBinder; //Use the default binder to serialize values into complex objects
 
-      
+
                 repo.Register("boundAsync", new BoundObject(), isAsync: true, options: bindingOptions);
             }
         }
@@ -89,7 +89,8 @@ namespace WpfCef
 
         public class BoundObject
         {
-            public int Add(int a, int b)
+            //方法只能以小写字母开头
+            public int add(int a, int b)
             {
                 return a + b;
             }
