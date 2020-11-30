@@ -39,26 +39,13 @@ namespace WpfCef
 
             CefSharpSettings.LegacyJavascriptBindingEnabled = true;
             browser.JavascriptObjectRepository.Register("boundAsync", new BoundObject(), true, BindingOptions.DefaultBinder);
-            browser.JavascriptObjectRepository.ResolveObject += JavascriptObjectRepository_ResolveObject;
+            //js是否已成功绑定
             browser.JavascriptObjectRepository.ObjectBoundInJavascript += (sender1, e1) =>
             {
                 var name = e1.ObjectName;
 
                 Debug.WriteLine($"Object {e1.ObjectName} was bound successfully.");
             };
-        }
-
-        private void JavascriptObjectRepository_ResolveObject(object sender, CefSharp.Event.JavascriptBindingEventArgs e)
-        {
-            var repo = e.ObjectRepository;
-            if (e.ObjectName == "boundAsync")
-            {
-                BindingOptions bindingOptions = null; //Binding options is an optional param, defaults to null
-                bindingOptions = BindingOptions.DefaultBinder; //Use the default binder to serialize values into complex objects
-
-
-                repo.Register("boundAsync", new BoundObject(), isAsync: true, options: bindingOptions);
-            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
