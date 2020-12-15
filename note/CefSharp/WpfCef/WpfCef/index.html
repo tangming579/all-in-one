@@ -4,30 +4,12 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
-<body>
-    <script>
-        window.onload = function () {
-            CefSharp.BindObjectAsync("boundAsync");
-        }
-    </script>
-    <script type="text/javascript">
-        function test1(listdata) {
-
-            alert(listdata["age"])
-        }
-        function test2(listdata) {
-
-            return listdata["age"]
-        }
-        async function test3() {
-            await boundAsync.showMessage("aaaa")
-        }
-        async function test4() {
-            sum = await boundAsync.add(6, 7)
-            alert(sum)
-        }
-    </script>
-    <input type="button" onclick="test3()" value="showMessage" />
-    <input type="button" onclick="test4()" value="Add" />
+<body bgcolor="green">
+    <script type="text/javascript" src="./nis_cef.js"></script>
+    <div>
+        <input type="button" onclick="jsCallCSharpDemo1()" value="showMessage" />
+        <input type="button" onclick="jsCallCSharpDemo2()" value="Add" />
+    </div>
+    <center>index.html</center>
 </body>
 </html>

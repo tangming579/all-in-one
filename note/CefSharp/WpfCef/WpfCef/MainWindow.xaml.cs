@@ -35,10 +35,13 @@ namespace WpfCef
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             //browser.ShowDevTools();
+            //CefSharpSettings.LegacyJavascriptBindingEnabled = true;
             this.browser.Address = AppDomain.CurrentDomain.BaseDirectory + @"index.html";
 
-            CefSharpSettings.LegacyJavascriptBindingEnabled = true;
-            browser.JavascriptObjectRepository.Register("boundAsync", new BoundObject(), true, BindingOptions.DefaultBinder);
+            var obj = new BoundObject();
+            obj.OnReceiveMsg += Obj_OnReceiveMsg;           
+            browser.JavascriptObjectRepository.Register("boundAsync", obj, true, BindingOptions.DefaultBinder);
+
             //js是否已成功绑定
             browser.JavascriptObjectRepository.ObjectBoundInJavascript += (sender1, e1) =>
             {
@@ -48,24 +51,31 @@ namespace WpfCef
             };
         }
 
+        private void Obj_OnReceiveMsg(object sender, EventArgs e)
+        {
+            MessageBox.Show($"Receive msg from html, {sender}","Wpf Window");
+        }
+
+        //调用javascript方法jsFunction1
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             var obj = new Model();
             obj.name = "hello";
             obj.age = 2;
             var jsons = new JavaScriptSerializer().Serialize(obj);
-            string js = $"test1({jsons});";
+            string js = $"jsFunction1({jsons});";
             browser.ExecuteScriptAsync(js);
         }
-
+        //调用javascript方法jsFunction2
         private async void Button_Click1(object sender, RoutedEventArgs e)
         {
-            var obj = new JObject();
-            obj["name"] = "hello";
-            obj["age"] = 12;
-            string js = $"test2({obj});";
+            var json = new JObject();
+            json["name"] = "hello";
+            json["age"] = 12;
+            string js = $"jsFunction2({json});";
             var response = await browser.EvaluateScriptAsync(js);
-            MessageBox.Show(response.Result + "");
+            //response.Result为调用方法的返回值
+            MessageBox.Show(response.Result + "", "Wpf Window");
         }
 
         public class Model
@@ -76,6 +86,7 @@ namespace WpfCef
 
         public class BoundObject
         {
+            public event EventHandler OnReceiveMsg;
             //方法只能以小写字母开头
             public int add(int a, int b)
             {
@@ -83,8 +94,13 @@ namespace WpfCef
             }
             public void showMessage(string msg)
             {
-                MessageBox.Show(msg);
+                OnReceiveMsg?.Invoke(msg, new EventArgs());
             }
+        }
+
+        private void btnRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            browser.Reload();
         }
     }
 }
