@@ -38,6 +38,8 @@ namespace jwtDemo
                         ValidIssuer = "Security:Tokens:Issuer",
                         ValidateAudience = true,
                         ValidAudience = "Security:Tokens:Audience",
+                        // 是否验证Token有效期，使用当前时间与Token的Claims中的NotBefore和Expires对比
+                        ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Security:Tokens:Key"))
                     };
@@ -45,7 +47,7 @@ namespace jwtDemo
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPI", Version = "v1" });
+                c.SwaggerDoc("api", new OpenApiInfo { Title = "WebAPI", Version = "v1" });
                 var securityScheme = new OpenApiSecurityScheme
                 {
                     Name = "JWT Authentication",
@@ -72,10 +74,17 @@ namespace jwtDemo
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "jwtDemo v1"));
+                //启用SwaggerUI样式
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/api/swagger.json", "v1");
+                    c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.None);
+                });
             }
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

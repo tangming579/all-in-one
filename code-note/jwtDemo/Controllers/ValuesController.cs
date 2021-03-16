@@ -15,15 +15,15 @@ namespace jwtDemo.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[ApiExplorerSettings(GroupName = "api")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ValuesController : ControllerBase
     {
 
-        [HttpGet("Get"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("Get")]
         public string Get()
         {
             return "hello";
-        }    
-        
+        }
+
     }
 }

@@ -13,38 +13,41 @@ using System.Threading.Tasks;
 
 namespace jwtDemo.Controllers
 {
-    //[ApiExplorerSettings(GroupName = "User")]
     [Route("api/[controller]")]
-    [ApiController]    
+    [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class UserController : ControllerBase
     {
-        [HttpGet("Get"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public string Get()
+        [HttpGet("Login")]
+        [AllowAnonymous]
+        public IActionResult Login(string username, string password)
         {
-            return "hello";
-        }
+            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
+                return BadRequest(new { code = 400, msg = "用户名或密码不能为空" });
 
-        [HttpGet("GetToken")]
-        public IActionResult GetToken()
-        {
-            return Ok(new { Token = BuildToken("admin") });
-        }
-
-        private string BuildToken(string userId)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
+            var claims = new Claim[]
+            {
+                new Claim("userId",username)
+            };
             var key = Encoding.ASCII.GetBytes("Security:Tokens:Key");
+            var tokenHandler = new JwtSecurityTokenHandler();
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Issuer = "Security:Tokens:Issuer",
                 Audience = "Security:Tokens:Audience",
-                Subject = new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, userId) }),
-                Expires = DateTime.UtcNow.AddDays(7),
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.UtcNow.AddSeconds(60),
+                NotBefore = DateTime.UtcNow,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token);
+            return Ok(new { code = 200, msg = "成功", data = tokenHandler.WriteToken(token) });
+        }
+
+        [HttpGet("Get"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public string Get()
+        {
+            return "hello";
         }
     }
 }
