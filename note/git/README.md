@@ -23,3 +23,18 @@ Git 并不保存这些前后变化的差异数据。实际上，Git 更像是把
 - 近乎所有操作都是本地执行
 - 时刻保持数据完整性
 - 多数操作仅添加数据
+
+### git fetch 与 git pull
+
+```powershell
+git fetch origin develop
+git pull origin develop
+git branch develop
+git checkout develop
+```
+
+git分为本地仓库和远程仓库，我们一般情况都是写完代码，commit到本地仓库（生成本地仓的commit ID，代表当前提交代码的版本号），然后push到远程仓库（记录这个版本号）
+
+`git fetch`是将远程主机的最新内容拉到本地，用户在检查了以后决定是否合并到工作本机分支中。
+
+`git pull` 则是将远程主机的最新内容拉下来后直接合并，即：`git pull = git fetch + git merge`，这样可能会产生冲突，需要手动解决。

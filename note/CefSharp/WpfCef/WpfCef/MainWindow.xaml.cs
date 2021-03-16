@@ -28,8 +28,6 @@ namespace WpfCef
         {
             InitializeComponent();
             Loaded += MainWindow_Loaded;
-
-            //browser.JavascriptObjectRepository.ResolveObject += JavascriptObjectRepository_ResolveObject;
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
