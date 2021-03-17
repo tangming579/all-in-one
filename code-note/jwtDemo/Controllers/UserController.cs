@@ -44,6 +44,13 @@ namespace jwtDemo.Controllers
             return Ok(new { code = 200, msg = "成功", data = tokenHandler.WriteToken(token) });
         }
 
+        [HttpDelete("DeleteUser")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult DeleteUser(string username)
+        {
+            return Ok(new { code = 200, msg = "成功", data = new { } });
+        }
+
         [HttpGet("Get"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public string Get()
         {
