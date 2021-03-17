@@ -25,9 +25,15 @@ namespace jwtDemo.Controllers
             if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
                 return BadRequest(new { code = 400, msg = "用户名或密码不能为空" });
 
-            var claims = new Claim[]
+            var authTime = DateTime.UtcNow;
+            var expiresAt = authTime.AddSeconds(30);//到期时间
+
+            var role = string.Equals(username, "Admin") ? "Admin" : "Guest";
+            var claims = new List<Claim>
             {
-                new Claim("userId",username)
+                new Claim(ClaimTypes.Name,username),
+                new Claim(ClaimTypes.Role,role),
+                new Claim(ClaimTypes.Expiration,$"{new DateTimeOffset(expiresAt).ToUnixTimeSeconds()}")//到期时间，按秒数计算
             };
             var key = Encoding.ASCII.GetBytes("Security:Tokens:Key");
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -36,7 +42,7 @@ namespace jwtDemo.Controllers
                 Issuer = "Security:Tokens:Issuer",
                 Audience = "Security:Tokens:Audience",
                 Subject = new ClaimsIdentity(claims),
-                Expires = DateTime.UtcNow.AddSeconds(60),
+                Expires = expiresAt,
                 NotBefore = DateTime.UtcNow,
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
             };
@@ -54,6 +60,7 @@ namespace jwtDemo.Controllers
         [HttpGet("Get"), Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public string Get()
         {
+            var name = HttpContext.User.Identity.Name;
             return "hello";
         }
     }
